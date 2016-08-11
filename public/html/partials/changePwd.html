@@ -1,0 +1,54 @@
+<div class="register-box">
+    <div class="register-logo">
+        <a href=""><b>顺丰同城</b>商家版</a>
+    </div>
+
+    <div class="register-box-body">
+        <p class="login-box-msg">欢迎登录顺丰同城商家自助客户端</p>
+
+        <form method="post" name="changePwdForm">
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" placeholder="请输入用户名" ng-model="query.username" id="username">
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" placeholder="请输入旧密码" id="originPass" name="originPass"
+                       ng-model="query.originPass" >
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" placeholder="新密码(6-10位字母、数字、特殊符号组成)" id="newPass" name="newPass"
+                       ng-model="query.newPass" >
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+
+            <div class="form-group has-feedback"
+                 ng-class="{'has-success' : !changePwdForm.newPassConfirm.$pristine && changePwdForm.newPassConfirm.$valid,
+                             'has-error' : !changePwdForm.newPassConfirm.$pristine && changePwdForm.newPassConfirm.$invalid }">
+                <input type="password" class="form-control" placeholder="请确认新密码" id="newPassConfirm"
+                       name="newPassConfirm" ng-model="newPassConfirm"
+                        pw-check="newPass">
+
+                <div ng-show="!changePwdForm.newPassConfirm.$pristine && changePwdForm.newPassConfirm.$valid">
+                    <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+                </div>
+                <div ng-show="!changePwdForm.newPassConfirm.$pristine && changePwdForm.newPassConfirm.$invalid">
+                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+                </div>
+            </div>
+            <div class="row">
+                <!-- /.col -->
+                <div class="col-xs-4 pull-right">
+                    <button class="btn btn-primary btn-block btn-flat" ng-click="changePwd()">修改密码</button>
+                </div>
+                <!-- /.col -->
+            </div>
+        </form>
+        <a ui-sref="main.orderCreate" class="text-center">进入<b>顺丰同城</b>商家版</a>
+    </div>
+    <!-- /.form-box -->
+</div>
+<div class="lockscreen-footer text-center"  >
+    <strong>Copyright &copy; 2015-2016 <a href="http://www.sf-express.com">sf-express.com </a>.</strong> All rights
+    reserved.
+</div>

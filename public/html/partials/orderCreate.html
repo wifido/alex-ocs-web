@@ -1,0 +1,159 @@
+<div ng-init="initData()" class="row">
+    <!-- left column -->
+    <div class="col-md-6">
+        <!-- general form elements -->
+        <div class="box box-primary">
+            <!-- /.box-header -->
+            <div class="box-header with-border">
+                <h3 class="box-title">订单录入</h3>
+            </div>
+
+            <!-- form start -->
+            <form class="form-horizontal">
+                <div class="box-body">
+
+                    <div class="form-group">
+                        <label for="orderNo" class="col-sm-3 control-label">订单号</label>
+                        <div class="col-sm-7">
+                            <!--placeholder="请录入订单号或系统自动生成"-->
+                            <input ng-model="genOrderNo" type="text" class="form-control" id="orderNo"
+                                   ng-value="genOrderNo" ng-maxlength="23" maxlength="23">
+                        </div>
+                        <div class="btn-group col-sm-2 pull-right" role="group" aria-label="...">
+                            <button id="inputBtn" type="button" class="btn btn-default" ng-click="inputNo()">录入</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telephone" class="col-sm-3 control-label">联系方式</label>
+                        <div class="col-sm-9">
+                            <input ng-model="query.contactMobile" type="tel" class="form-control" id="telephone"
+                                   placeholder="请输入联系手机或电话(无需填写区号)" ng-maxlength="11" maxlength="11">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="linkman" class="col-sm-3 control-label">收货人</label>
+                        <div class="col-sm-9">
+                            <input ng-model="query.contactPerson" type="text" class="form-control" id="linkman"
+                                   placeholder="请输入收货联系人" ng-maxlength="20" maxlength="20" >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="area" class="col-sm-3 control-label">省市区</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" ng-value="city" disabled="true">
+                        </div>
+                        <div class="col-sm-4">
+                            <select ng-model="areaSelector.selectedOption" class="form-control" id="area"
+                                    ng-options="option.name for option in areaSelector.availableOptions track by option.id">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactAddress" class="col-sm-3 control-label">详细地址</label>
+                        <div class="col-sm-9">
+                            <input ng-model="query.contactAddress" type="text" class="form-control" id="contactAddress"
+                                   placeholder="请输入详细地址" ng-maxlength="200" maxlength="200">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="codFee" class="col-sm-3 control-label">代收金额</label>
+                        <div class="col-sm-5 ">
+                            <div class="input-group">
+                                <span class="input-group-addon">￥</span>
+                                <input ng-model="query.orderAmount" type="text" class="form-control" id="codFee"
+                                       placeholder="请输入代收金额" ng-maxlength="8" maxlength="8">
+                            </div>
+                        </div>
+                        <div class="btn-group col-sm-4 pull-right" role="group" aria-label="...">
+                            <button id="payedBtn" type="button" class="btn btn-default" ng-click="payed()">已付款</button>
+                            <button id="nopayBtn" type="button" class="btn btn-default"
+                                    ng-click="nopay()">未付款
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="leibie" class="col-sm-3 control-label">商品类别</label>
+                        <div class="col-sm-5 ">
+                            <select ng-model="selector.selectedOption" class="form-control" id="leibie"
+                                    ng-options="option.name for option in selector.availableOptions track by option.type">
+                            </select>
+                        </div>
+                        <label for="quantity" class="col-sm-2 control-label">数量</label>
+                        <div class="col-sm-2 ">
+                            <input ng-model="query.productNum" type="number" class="form-control" id="quantity"
+                                   placeholder="1" ng-maxlength="3" maxlength="3">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight" class="col-sm-3 control-label">重量</label>
+                        <div class="col-sm-9">
+                            <input ng-model="query.weight" type="text" class="form-control" id="weight"
+                                   placeholder="请输入重量" ng-maxlength="10" maxlength="10">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="remark" class="col-sm-3 control-label">备注</label>
+                        <div class="col-sm-9">
+                            <input ng-model="query.remark" type="text" class="form-control" id="remark"
+                                   placeholder="请输入备注" ng-maxlength="30" maxlength="30">
+                        </div>
+                    </div>
+
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <button type="reset" class="btn btn-default" ng-click="resetData()">重置</button>
+                        <button type="submit" class="btn btn-info pull-right" ng-click="createOrder()">创建订单</button>
+                    </div>
+                </div> <!-- /.box-footer -->
+            </form>
+            <!-- form end -->
+        </div>
+    </div>
+
+    <!-- right column -->
+    <div class="col-md-6">
+        <!-- general form elements -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">批量导入</h3>
+            </div>
+            <!-- form start -->
+            <form role="form">
+                <div class="box-body">
+
+                    <div class="form-group">
+                        <label for="inputFile" class="col-sm-3 control-label">订单导入</label>
+                        <div class="col-sm-9">
+                            <input ng-disabled="disable" id="inputFile" type="file" ngf-select ng-model="file"
+                                   name="file"
+                                   ngf-accept="&#39;.xls&#39;">
+                            <p class="help-block">请用模板格式导入订单.</p>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.box-body -->
+                <!-- 进度条 -->
+                <ocs-progress percent="{{percent}}"></ocs-progress>
+                <div class="box-footer">
+                    <a ng-href="{{templateDownload}}" class="btn btn-default">模板下载</a>
+                    <!--<button ng-click="downLoadFile()" type="submit" class="btn btn-default">-->
+                    <!--模板下载-->
+                    <!--</button>-->
+                    <button ng-disabled="disable" ng-click="upload(file)" type="submit"
+                            class="btn btn-primary pull-right">上传
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- /.box -->
+</div>

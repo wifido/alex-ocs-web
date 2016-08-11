@@ -1,0 +1,384 @@
+<div class="row">
+
+    <div class="widget-box">
+        <div class="widget-content">
+            <div id="mapContainer" ></div>
+        </div>
+
+    </div>
+
+    <div class="widget-box">
+        <div class="widget-content">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <ul class="site-stats">
+
+                        <li class="bg_lh" >
+                            <small>10分钟到店率</small>
+                            <strong>{{ arrivalRate }}</strong><i>%</i>
+                        </li>
+
+                        <li class="bg_lh">
+                            <small>40分钟送达率</small>
+                            <strong>{{ backRate }}</strong><i>%</i>
+                        </li>
+
+                        <li class="bg_lh">
+                            <small>当前配送员人数</small>
+                            <strong>{{ atWorkEmpNum }}</strong>
+                        </li>
+
+                        <li class="bg_lh">
+                            <small>妥投时效异常</small>
+                            <strong class="text-red">{{ excptionDeliveryInTime }}</strong><i>单</i>
+                        </li>
+
+                        <li class="bg_lh">
+                            <small>任务量</small>
+                            <strong >{{ onTheWayOrder }}</strong><i>/{{ completedOrder }}</i>
+                        </li>
+
+                        <li class="bg_lh">
+                            <small>平均订单时长</small>
+                            <strong>{{ orderTimeAvg }}</strong><i>Min</i>
+                        </li>
+
+                        <li class="bg_lh">
+                            <small>平均取货时长</small>
+                            <strong>{{ pickupTimeAvg }}</strong><i>Min</i>
+                        </li>
+
+                        <li class="bg_lh">
+                            <small>平均妥投时长</small>
+                            <strong>{{ deliveryTimeAvg }}</strong><i>Min</i>
+                        </li>
+
+                        <li class="bg_lh">
+                            <small>时效内妥投占比</small>
+                            <strong>{{ deliveryInTimeRate }}</strong><i>%</i>
+                        </li>
+
+                        <li class="bg_lh" ng-click="showUndistributedOrderList()">
+
+                            <small>未取货订单</small>
+                            <strong class="text-red">{{ undistributedOrderNum }}</strong>
+                        </li>
+
+
+                    </ul>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="widget-box">
+        <div class="widget-title-l">
+            <div class="form-inline padding">
+                <div class="margin-b-5 col-lg-6 col-md-5 col-sm-12 col-xs-12">
+                    <button class="btn btn-primary margin-l-5" ng-click="complaint()">投诉</button>
+
+                    <button class="btn btn-primary margin-l-5" ng-click="press()">催单</button>
+
+                    <button class="btn btn-primary margin-l-5" ng-click="applyForResource()">资源申请</button>
+                </div>
+
+                <div class="margin-b-5 col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="input-group">
+                        <span class="input-group-addon">配送员:</span>
+                        <input type="text" class="form-control" ng-model="empName">
+                    </div>
+                </div>
+
+                <div class="btn-group pull-right margin-r-18" >
+                    <button class="btn btn-danger span4" ng-click="doSearch()" ng-disabled="empName.length>0?false:true">搜索</button>
+
+                    <button class="btn btn-primary " ng-click="doDismiss()">取消</button>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="widget-content">
+            <div class="padding">
+                <form>
+                    <table  id="storeOrderTable"
+                            data-toggle="table"
+                            data-cache="false"
+                            data-cardView="true"
+                            data-show-header="true"
+
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field="flag"  data-checkbox="true"></th>
+                            <th data-field="flag"    data-align="center" >序号</th>
+                            <th data-field="storeName"  data-align="center"  >门店</th>
+                            <th data-field="name" data-align="center"  >配送员</th>
+                            <th data-field="id" data-align="center"  >唯一识别标志</th>
+                            <th data-field="contact" data-align="center"  >联系方式</th>
+                            <th data-field="type" data-align="center"  >类型</th>
+                            <th data-field="status" data-align="center"  >状态</th>
+                            <th data-field="orders" data-align="center"  >任务量</th>
+                            <th data-field="currentOrders" data-align="center"  >当前订单号</th>
+                            <th data-field="operation" data-align="center"  >详情</th>
+
+
+                        </tr>
+
+                        </thead>
+
+
+                    </table>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+<!-- 投诉界面-->
+<div class="modal fade" id="complaintModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">确认投诉</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="input-group ">
+                        <span class="input-group-addon ">投诉对象:</span>
+                        <span class="form-control" >{{ empNameForComplain }}</span>
+                    </div>
+
+                    <div class="input-group ">
+                        <span class="input-group-addon ">唯一识别标志:</span>
+                        <span class="form-control" >{{ empIdForComplain }}</span>
+                    </div>
+                    <div class="input-group">请输入投诉理由:</div>
+                    <textarea rows="3" id="complainReason" ng-model="complainReason"
+                              ng-change="checkText()" ng-class="(complainReason.length > 50|| complainReason.length== 0 )?'form-control border-red':'form-control border-blue'">
+
+
+                    </textarea>
+                    <span style="float: left;" class="text-red" ng-show="isShow">字数不符合要求!</span>
+                    <span style="float: right;font-size: 12px;color: #b4b8c1;">(字数限制小于50字)</span>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" ng-click="doComplaint()" ng-disabled="(complainReason.length > 50 || complainReason.length ==0)?true:false">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 催单界面-->
+<div class="modal fade" id="pressModal" tabindex="-1" role="dialog" aria-labelledby="pressModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="pressModalLabel">确认催单</h4>
+            </div>
+            <div class="modal-body">
+                您确定进行催单吗?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" ng-click="doPress()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 请求资源-->
+<div class="modal fade" id="applyForResourceModal" tabindex="-1" role="dialog" aria-labelledby="resApplicationModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="resApplicationModalLabel">{{ authUser.shopName }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <span class="input-group-addon"> 需求人数:</span>
+                    <input ng-model="needPerson" type="number" class="form-control">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="doApplyForResource()">发送</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 未取货订单-->
+<div class="modal fade" id="undistributedOrderListModal" tabindex="-1" role="dialog" aria-labelledby="undistributedOrderListModalLabel">
+    <div class="modal-dialog modal-dialog-wid-60" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="undistributedOrderListModalLabel">未取货订单</h4>
+            </div>
+            <div class="modal-body">
+                <div class="padding">
+                    <form>
+                        <table  id="undistributedOrderListTable"
+                                data-toggle="table"
+                                data-cache="false"
+                                data-cardView="true"
+                                data-show-header="true"
+
+                        >
+                            <thead>
+                            <tr>
+                                <th data-field="orderNo"  data-align="center">订单号</th>
+                                <th data-field="empName"  data-align="center">配送员姓名</th>
+                                <th data-field="contact" data-align="center">联系方式</th>
+                                <th data-field="predictDate" data-align="center">预计取货时间</th>
+                            </tr>
+
+
+                            </thead>
+
+
+                        </table>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 配送员详情-->
+<div class="modal fade" id="empKpiAndOrderModal" tabindex="-1" role="dialog" aria-labelledby="empKpiAndOrderModalLabel" >
+    <div class="modal-dialog modal-dialog-wid-85" role="document" >
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="empKpiAndOrderModalLabel">配送员详情</h4>
+
+                <input type="hidden" name="modelEmpName" ng-model="modelEmpName" >
+                <input type="hidden" name="empContact" ng-model="empContact" >
+                <input type="hidden" name="resourceId" ng-model="resourceId">
+                <input type="hidden" name="empOnTheWayOrder" ng-model="empOnTheWayOrder">
+                <input type="hidden" name="empCompletedOrder" ng-model="empCompletedOrder">
+            </div>
+            <div class="modal-body body-gray">
+                <div class="padding">
+                    <ul class="site-stats-4">
+
+                        <li class="bg_lh" >
+                            <small>10分钟到店率</small>
+                            <strong>{{ empArrivalRate }}</strong><i>%</i>
+
+                        </li>
+                        <li class="bg_lh">
+                            <small>40分钟送达率</small>
+                            <strong>{{ empBackRate }}</strong><i>%</i>
+                        </li>
+
+                        <li class="bg_lh">
+                            <small>任务量</small>
+                            <strong >{{ empOnTheWayOrder }}</strong><i>/{{empCompletedOrder}}</i>
+                        </li>
+
+                        <li class="bg_lh">
+                            <small>时效内妥投占比</small>
+                            <strong>{{ empDeliveryInTimeRate }}</strong><i>%</i>
+                        </li>
+
+
+                    </ul>
+
+
+                    <form >
+                        <table  id="deliveryEmpOrderListTable"
+                                data-toggle="table"
+                                data-cache="false"
+                                data-cardView="true"
+                                data-show-header="true"
+                        >
+                            <thead>
+                            <tr>
+                                <th data-field="name"  data-align="center">配送员</th>
+                                <th data-field="contact"  data-align="center">联系方式</th>
+                                <th data-field="orderNo" data-align="center">订单号码</th>
+                                <th data-field="endTime" data-align="center">完成时间</th>
+                                <th data-field="predictEndTime" data-align="center">预计时间</th>
+                                <th data-field="status" data-align="center">状态</th>
+                            </tr>
+
+                            </thead>
+
+
+                        </table>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- 订单详情-->
+<div class="modal fade" id="orderDetailModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailModalLabel">
+    <div class="modal-dialog modal-dialog-wid-60" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="orderDetailModalLabel">订单详情</h4>
+
+                <input type="hidden" name="orderDetailNo">
+            </div>
+            <div class="modal-body">
+                <div class="padding">
+                    <form>
+                        <table  id="orderDetailTable"
+                                data-toggle="table"
+                                data-cache="false"
+                                data-cardView="true"
+                                data-show-header="true"
+                        >
+                            <thead>
+                            <tr>
+                                <th data-field="orderNo"  data-align="center">订单号</th>
+                                <th data-field="orderState" data-align="center">订单状态</th>
+                                <th data-field="deliveryEmpName"  data-align="center">配送员姓名</th>
+                                <th data-field="deliveryEmpTel"  data-align="center">配送员手机</th>
+                                <th data-field="operateDate" data-align="center">操作时间</th>
+                                <th data-field="exceptionReason" data-align="center">异常原因</th>
+                            </tr>
+
+
+                            </thead>
+
+
+                        </table>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+

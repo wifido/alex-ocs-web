@@ -1,0 +1,32 @@
+<div class="modal fade" id="batchOrderResultModal" tabindex="-1" role="dialog"
+     aria-labelledby="batchOrderResultModalLabel">
+    <div class="modal-dialog modal-dialog-wid-60" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="batchOrderResultModalLabel">订单导入结果，成功单数：{{successNum}}，失败单数：{{failNum}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="padding">
+                    <form>
+                        <table id="batchOrderResultTable"
+                               data-toggle="table"
+                               data-cache="false"
+                               data-cardView="true"
+                               data-show-header="true"
+                               data-pagination="true"
+                               data-page-number="10">
+                            <thead>
+                            <tr>
+                                <th data-field="orderNo" data-align="center">订单号</th>
+                                <th data-field="reason" data-align="center">失败原因</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
