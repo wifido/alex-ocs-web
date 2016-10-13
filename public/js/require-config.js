@@ -8,7 +8,7 @@ requirejs.config({
       jqueryUI   : 'jquery-ui/jquery-ui-u.min',
       bootstrap : 'bootstrap/bootstrap.min',
       bootstrapGrowl : 'bootstrap-growl/jquery.bootstrap-growl.min',
-      angular   : 'angular/angular.min',
+      angular   : 'angular/angular',
       AdminLTE  : 'AdminLTE/app.min',
       uiRouter  : 'angular-ui-router/angular-ui-router.min',
       slimscroll : 'jquery.slimscroll.min',
@@ -18,10 +18,13 @@ requirejs.config({
       angularBase64 : 'angular-base64/angular-base64.min',
       uiDate : 'angular-ui-date/angular-date',
       angularFileUpload : 'angular-file-upload/ng-file-upload.min',
+      angularFileSaver : 'angular-file-saver/angular-file-saver.bundle',
+      blob : 'blob-polyfill/Blob',
       select2 : 'plugins/select2/select2.full.min',
       select2CN: 'plugins/select2/zh-CN',
       bootstrapTable : 'plugins/table/bootstrap-table.min',
-      bootstrapTableCN : 'plugins/table/bootstrap-table-zh-CN'
+      bootstrapTableCN : 'plugins/table/bootstrap-table-zh-CN',
+      PlaceSearchRender : 'PlaceSearchRender/PlaceSearchRender'
       // uiBootstrap: 'ui-bootstrap/ui-bootstrap.min'
       // ngTable : 'ng-table/ng-table'
   },
@@ -38,10 +41,13 @@ requirejs.config({
      angularCookies :{deps : ['angular']},
      angularBase64:{deps : ['angular']},
      angularFileUpload:{deps : ['angular']},
+     angularFileSaver:{deps : ['angular']},
+     blob:{deps : ['angular']},
      select2 : { deps : [ 'jquery' ] },
      select2CN:{ deps : [ 'jquery','select2' ]},
      bootstrapTable : { deps : [ 'jquery' ] },
-     bootstrapTableCN : { deps : [ 'jquery' ,'bootstrapTable'] }
+     bootstrapTableCN : { deps : [ 'jquery' ,'bootstrapTable'] },
+     PlaceSearchRender : { deps : ['jquery']}
      // uiBootstrap : { deps : ['bootstrap'] }
      // ngTable : { deps: ['angular'] }
   },
@@ -66,6 +72,7 @@ requirejs([
   'select2CN',
   'bootstrapTable',
   'bootstrapTableCN',
+  'PlaceSearchRender',
   // 'uiBootstrap',
   // 'ngTable',
   '../ocsApp' + version

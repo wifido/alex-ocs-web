@@ -22,6 +22,7 @@ define([
                                 var expireDate = new Date();
                                 expireDate.setDate(expireDate.getDate() + 1);
                                 $cookies.put('B-token', data, {'expires': expireDate});
+                                $cookies.put('E-token', $base64.encode(data));
                                 deferred.resolve(data);
                             } else {
                                 deferred.reject({

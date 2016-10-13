@@ -10,6 +10,7 @@ define([
     'angularBase64',
     'datatable',
     'angularFileUpload',
+    'angularFileSaver',
     // 'ngTable',
     './app/controllers' + version,
     './app/controllers/orderController' + version,
@@ -23,32 +24,32 @@ define([
     './app/directives' + version
 ], function (angular) {
     'use strict';
-    return angular.module('ocsApp', ['appCtrls', 'appBizs', 'appDirs', 'ngCookies', 'ui.router', 'ui.date', 'base64', 'ngFileUpload'])
+    return angular.module('ocsApp', ['appCtrls', 'appBizs', 'appDirs', 'ngCookies', 'ui.router', 'ui.date', 'base64', 'ngFileUpload', 'ngFileSaver'])
         .config(
-            function ($stateProvider, $urlRouterProvider) {
+        function ($stateProvider, $urlRouterProvider) {
 
-                //浏览器类型检查,推荐使用Chrome
-                $(document).ready(function () {
-                    var agent = navigator.userAgent.toLowerCase();
-                    var regStr_chrome = /chrome\/[\d.]+/gi;
-                    //Chrome
-                    if (agent.indexOf("chrome") > 0) {
-                        return agent.match(regStr_chrome);
-                    } else {
-                        $.bootstrapGrowl("建议使用谷歌浏览器", {
-                            type: 'danger', // (null, 'info', 'danger', 'success')
-                            offset: {from: 'top', amount: 20}, // 'top', or 'bottom'
-                            align: 'center', // ('left', 'right', or 'center')
-                            width: 500, // (integer, or 'auto')
-                            delay: 6000 // Time while the message will be displayed. It's not equivalent to the *demo* timeOut!
-                        });
-                    }
-                });
+            //浏览器类型检查,推荐使用Chrome
+            $(document).ready(function () {
+                var agent = navigator.userAgent.toLowerCase();
+                var regStr_chrome = /chrome\/[\d.]+/gi;
+                //Chrome
+                if (agent.indexOf("chrome") > 0) {
+                    return agent.match(regStr_chrome);
+                } else {
+                    $.bootstrapGrowl("建议使用谷歌浏览器", {
+                        type: 'danger', // (null, 'info', 'danger', 'success')
+                        offset: {from: 'top', amount: 20}, // 'top', or 'bottom'
+                        align: 'center', // ('left', 'right', or 'center')
+                        width: 500, // (integer, or 'auto')
+                        delay: 6000 // Time while the message will be displayed. It's not equivalent to the *demo* timeOut!
+                    });
+                }
+            });
 
-                //setDefaultPage
-                $urlRouterProvider
-                    .when('/', 'main')
-                    .otherwise('/');
+            //setDefaultPage
+            $urlRouterProvider
+                .when('/', 'main')
+                .otherwise('/');
 
                 $stateProvider
                     .state('auth', {
@@ -70,6 +71,11 @@ define([
                         templateUrl: 'html/partials/orderList.html',
                         controller: 'orderListCtrl'
                     })
+                    .state('main.orderAudit', {
+                        url: '/order/audit',
+                        templateUrl: 'html/partials/orderAudit.html',
+                        controller: 'orderAuditCtrl'
+                    })
                     .state('changePwd', {
                         url: '/changePwd',
                         templateUrl: 'html/partials/changePwd.html',
@@ -84,7 +90,38 @@ define([
                         url:'/store/merChantManager',
                         templateUrl:'html/partials/merChantManager.html',
                         controller:'merChantManagerCtrl'
-                    });
+                    })
+                    .state('main.storeCreate', {
+                        url: '/store/create',
+                        templateUrl: 'html/partials/storeCreate.html',
+                        controller: 'storeCreateCtrl'
+                    })
+                    .state('main.storeEdit', {
+                        url: '/store/edit/::shopId',
+                        templateUrl: 'html/partials/storeEdit.html',	
+                        controller: 'storeEditCtrl'
+                    })
+                    .state('main.storeShow', {
+                        url: '/store/show/::shopId',
+                        templateUrl: 'html/partials/storeShow.html',
+                        controller: 'storeShowCtrl'
+                    })
+                    .state('main.storeList', {
+                        url: '/store/list',
+                        templateUrl: 'html/partials/storeList.html',
+                        controller: 'storeListCtrl'
+                    })
+                    .state('main.myBill', {
+                        url: '/bill/myBill',
+                        templateUrl: 'html/partials/myBill.html',
+                        controller: 'myBillCtrl'
+                    })
+                    .state('main.billList', {
+                        url: '/bill/list',
+                        templateUrl: 'html/partials/billList.html',
+                        controller: 'billListCtrl'
+                    })
+					;
             }
         )
         .provider("$ocsPopup", [function () {
@@ -181,14 +218,14 @@ define([
                         confirm: function (opts) {
                             var deferred = $q.defer();
                             var defaultOpts = {
-                                templateUrl : 'js/app/template/confirm.html',
-                                container : 'body',
-                                id : 'confirmModal',
-                                scope : $rootScope,
-                                tittle : '操作提示',
-                                content : '确认要这样吗',
-                                okText : '确认',
-                                cancelText : '取消'
+                                templateUrl: 'js/app/template/confirm.html',
+                                container: 'body',
+                                id: 'confirmModal',
+                                scope: $rootScope,
+                                tittle: '操作提示',
+                                content: '确认要这样吗',
+                                okText: '确认',
+                                cancelText: '取消'
                             };
                             var config = angular.extend({}, defaultOpts, opts);
                             var idStr = '#' + config.id;
@@ -223,12 +260,12 @@ define([
                         showModal: function (opts) {
                             var deferred = $q.defer();
                             var defaultOpts = {
-                                templateUrl : 'js/app/template/modal.html',
-                                container : 'body',
-                                id : 'commonModal',
-                                scope : $rootScope,
-                                tittle : '',
-                                content : ''
+                                templateUrl: 'js/app/template/modal.html',
+                                container: 'body',
+                                id: 'commonModal',
+                                scope: $rootScope,
+                                tittle: '',
+                                content: ''
                             };
                             var config = angular.extend({}, defaultOpts, opts);
                             var idStr = '#' + config.id;
@@ -357,47 +394,66 @@ define([
                 //重复请求拦截器:需要返回结果后才能继续发送请求
                 $httpProvider.interceptors.push('dupSubmitInterceptor');
             }]
-        )
+    )
         .value('SystemConfig', {
-            ocs_url: 'https://o2o.sit.sf-express.com:14443/api', //uat
+            //ocs_url: 'http://10.118.139.63:8080', //dev
+            ocs_url: 'http://10.118.60.73:8080', //local
+            // ocs_url: 'https://o2o.sit.sf-express.com:14443/api', //uat
             // ocs_url: 'https://o2o.sf-express.com:443/api', //production
             url_template_download: 'https://o2o.sit.sf-express.com:14443/js/lib/orderDownload.xls', //uat
             // url_template_download: 'https://o2o.sf-express.com:443/js/lib/orderDownload.xls', //production
+            // url_print: 'http://10.118.60.73:8081/html/build/print' + version + '.html', //local
             url_print: 'https://o2o.sit.sf-express.com:14443/html/build/print' + version + '.html', //uat
             // url_print: 'https://o2o.sf-express.com:443/html/build/print.html', //production
             url_auth: '/authc/login',
             url_changePwd: '/authc/changePwd',
             url_orderList: '/order/list',
+            url_orderExport: '/order/export',
             url_orderDetail: '/order/detail',
             url_createOrder: '/order/placeOrder',
+			url_storeInfoList: '/store/list',
+			url_createStore: '/store/saveStoreFirstInfo',
+			url_getDistInfos: '/shop/getDistInfos',
+			url_getShopInfo: '/store/getShopInfo',
             url_batchCreateOrder: '/order/batchPlaceOrder',
             url_printOrderList: '/order/print',
             url_modifyOrderAddress: '/order/modifyOrderAddress',
             url_cancelOrder: '/order/cancel',
+            url_addressBookList: '/order/addressBookListByParams',
             url_shopInfo: '/shop/detail',
             url_shopAreas: '/shop/areas',
             url_productType: '/shop/productTypes',
             url_complainDeliveryEmp: '/majorAccount/deliveryEmp/complain',
-            url_applyForResource:'/majorAccount/applyForResource',
-            url_urgeOrders:'/majorAccount/urgeOrders',
-            url_empListAndNum:'/majorAccount/empListAndNum',
-            url_empListByOrderNoAndEmpName:'/majorAccount/empList',
-            url_storeList:'/majorAccount/storeList',
-            url_storeKpi:'/majorAccount/storeKpi',
-            url_undistributedOrderNum:'/majorAccount/undistributedOrderNum',
-            url_undistributedOrderList:'/majorAccount/undistributedOrderList',
-            url_deliveryEmpKpiAndOrders:'/majorAccount/deliveryEmp/kpiAndOrders',
+            url_applyForResource: '/majorAccount/applyForResource',
+            url_urgeOrders: '/majorAccount/urgeOrders',
+            url_empListAndNum: '/majorAccount/empListAndNum',
+            url_empListByOrderNoAndEmpName: '/majorAccount/empList',
+            url_storeList: '/majorAccount/storeList',
+            url_storeKpi: '/majorAccount/storeKpi',
+            url_undistributedOrderNum: '/majorAccount/undistributedOrderNum',
+            url_undistributedOrderList: '/majorAccount/undistributedOrderList',
+            url_deliveryEmpKpiAndOrders: '/majorAccount/deliveryEmp/kpiAndOrders',
+            url_systemDate: '/system/now',
+            url_auditOrders: '/scorder/shop/list',
+            url_cancelAuditOrder: '/scorder/shop/cancel',
+            url_modifyAuditOrder: '/scorder/shop/modify',
+            url_auditScOrder: '/scorder/shop/audit',
+            url_weightOption: '/system/weightOption',
+            url_expectTimeOption: '/shop/expectTimeOption',
+            url_calDistance:'/shop/calDistance',
             urlSet: {
                 //async:异步请求拦截开关,reqStatus:请求状态,mask:加载loading是否显示
                 "/authc/login": {"async": true, "reqStatus": true, "mask": false},
                 "/authc/changePwd": {"async": true, "reqStatus": true, "mask": false},
                 "/order/list": {"async": true, "reqStatus": true, "mask": false},
+                "/order/export": {"async": true, "reqStatus": true, "mask": false},
                 "/order/detail": {"async": true, "reqStatus": true, "mask": false},
                 "/order/placeOrder": {"async": true, "reqStatus": true, "mask": false},
                 "/order/batchPlaceOrder": {"async": true, "reqStatus": true, "mask": false},
                 "/order/print": {"async": true, "reqStatus": true, "mask": false},
                 "/order/modifyOrderAddress": {"async": true, "reqStatus": true, "mask": false},
                 "/order/cancel": {"async": true, "reqStatus": true, "mask": false},
+                "/order/addressBookListByParams": {"async": true, "reqStatus": true, "mask": false},
                 "/shop/detail": {"async": true, "reqStatus": true, "mask": false},
                 "/shop/areas": {"async": true, "reqStatus": true, "mask": false},
                 "/shop/productTypes": {"async": true, "reqStatus": true, "mask": false},
@@ -410,32 +466,39 @@ define([
                 "/majorAccount/storeKpi": {"async": true, "reqStatus": true, "mask": false},
                 "/majorAccount/undistributedOrderNum": {"async": true, "reqStatus": true, "mask": false},
                 "/majorAccount/undistributedOrderList": {"async": true, "reqStatus": true, "mask": false},
-                "/majorAccount/deliveryEmp/kpiAndOrders": {"async": true, "reqStatus": true, "mask": false}
+                "/majorAccount/deliveryEmp/kpiAndOrders": {"async": true, "reqStatus": true, "mask": false},
+                "/scorder/shop/list": {"async": true, "reqStatus": true, "mask": false},
+                "/scorder/shop/cancel": {"async": true, "reqStatus": true, "mask": false},
+                "/scorder/shop/modify": {"async": true, "reqStatus": true, "mask": false},
+                "/scorder/shop/audit": {"async": true, "reqStatus": true, "mask": false},
+                "/system/weightOption": {"async": true, "reqStatus": true, "mask": false},
+                "/shop/expectTimeOption": {"async": true, "reqStatus": true, "mask": false},
+                "/shop/calDistance": {"async": true, "reqStatus": true, "mask": false}
             },
             orderInfo: 'orderInfo',
             // 权限角色
             userRole: {
-                business_important : 'ROLE_BUSINESS_IMPORTANT', // 中高端商家总部(管理)
-                store_important : 'ROLE_STORE_IMPORTANT', // 中高端商家门店
-                business_normal : 'ROLE_BUSINESS_NORMAL', // 普通商家(管理)
-                store_normal : 'ROLE_STORE_NORMAL', // 普通商家门店
-                other : 'ROLE_OTHER'
+                business_important: 'ROLE_BUSINESS_IMPORTANT', // 中高端商家总部(管理)
+                store_important: 'ROLE_STORE_IMPORTANT', // 中高端商家门店
+                business_normal: 'ROLE_BUSINESS_NORMAL', // 普通商家(管理)
+                store_normal: 'ROLE_STORE_NORMAL', // 普通商家门店
+                other: 'ROLE_OTHER'
             },
             // 角色路由映射
             userRoleRouteMap: {
                 'ROLE_BUSINESS_IMPORTANT': ['main', 'main.merChantManager'],
-                'ROLE_STORE_IMPORTANT': ['main', 'main.orderCreate', 'main.orderList', 'main.storeManager'],
+                'ROLE_STORE_IMPORTANT': ['main', 'main.orderCreate', 'main.orderList', 'main.orderAudit', 'main.storeCreate', 'main.storeList', 'main.storeEdit', 'main.storeShow', 'main.storeManager', 'main.myBill', 'main.billList'],
                 'ROLE_BUSINESS_NORMAL': ['main'],
-                'ROLE_STORE_NORMAL': ['main', 'main.orderCreate', 'main.orderList'],
+                'ROLE_STORE_NORMAL': ['main', 'main.orderCreate', 'main.orderList', 'main.orderAudit', 'main.storeCreate', 'main.storeList', 'main.storeEdit', 'main.storeShow', 'main.myBill', 'main.billList'],
                 'ROLE_OTHER' : ['main']
             },
             // 角色按钮映射(小粒度)
             userRoleButtonMap: {
-                'ROLE_BUSINESS_IMPORTANT': ['modifyAddress'],
-                'ROLE_STORE_IMPORTANT': ['modifyAddress'],
+                'ROLE_BUSINESS_IMPORTANT': ['modifyAddress', 'cancelOrder'],
+                'ROLE_STORE_IMPORTANT': ['modifyAddress', 'cancelOrder'],
                 'ROLE_BUSINESS_NORMAL': ['modifyAddress', 'cancelOrder'],
                 'ROLE_STORE_NORMAL': ['modifyAddress', 'cancelOrder'],
-                'ROLE_OTHER' : []
+                'ROLE_OTHER': []
             }
         })
         .run(['$rootScope', '$cookies', '$state', '$ocsPopup', 'authBiz', function ($rootScope, $cookies, $state, $ocsPopup, authBiz) {

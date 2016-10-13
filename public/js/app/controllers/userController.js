@@ -4,12 +4,31 @@ define([
     'use strict';
     return angular.module('appCtrls.userCtrls', [])
         //认证与登陆
-        .controller('authCtrl', ['$scope', '$state', '$rootScope', '$cookies', 'authBiz', 'shopBiz', '$ocsPopup', 'SystemConfig',
-            function ($scope, $state, $rootScope, $cookies, authBiz, shopBiz, $ocsPopup, SystemConfig) {
+        .controller('authCtrl', ['$scope', '$state', '$rootScope', '$cookies', 'authBiz', 'shopBiz', '$ocsPopup', 'SystemConfig', 'CacheBiz',
+            function ($scope, $state, $rootScope, $cookies, authBiz, shopBiz, $ocsPopup, SystemConfig, CacheBiz) {
+                var preUser = CacheBiz.getCacheFromLocal('userAccount'); //上次记住的账号
                 $scope.user = {
-                    password: '',
-                    username: ''
+                    username: preUser?preUser:"",
+                    password: ""
                 };
+                $scope.rememberUser = {checked: false}; //标记是否记住账号
+
+                $scope.rememberUserChange = function () {
+                    if ($scope.rememberUser.checked) {
+                        CacheBiz.setCacheToLocal('userAccount', $scope.user.username);
+                    } else {
+                        CacheBiz.removeCacheFromLocal('userAccount');
+                    }
+                };
+                $scope.$watch('user.username', function () {
+                    if ($scope.user.username != preUser) {
+                        $scope.rememberUser.checked = false;
+                    }
+                });
+                // $scope.user = {
+                //     password: '',
+                //     username: ''
+                // };
                 $scope.auth = function () {
                     if (!$scope.user.username) {
                         $ocsPopup.growl("请输入用户名", {type: 'danger'});

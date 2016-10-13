@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>顺丰同城 | 商家版</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content="顺丰速运同城配服务平台"/>
+    <meta content="telephone=no" name="format-detection">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <link rel="stylesheet" type="text/css" href="css/orderstyle.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <script src="js/lib/jquery-2.2.3.min.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/jquery.bootstrap-growl.js"></script>
+</head>
+<body>
+<header class="header-add">
+    <h1>欢迎登陆顺丰速运同城配服务平台</h1>
+    <a class="icon-back" href="#" style="display: none;"><i class="fa fa-angle-left"></i></a>
+</header>
+<div class="main order-main">
+    <div class="orderInfo-hd"><i class="fa fa-pencil"></i>填写收件人信息</div>
+    <form name="orderInfor">
+        <div class="form-gap clearfix">
+            <label for="receiveContacts" class="col-xs-12 control-label">收件人</label>
+            <div class="col-xs-12">
+                <input required type="text" class="form-control" id="receiveContacts"
+                       placeholder="请输入收件联系人" maxlength="20">
+            </div>
+        </div>
+        <div class="form-gap clearfix">
+            <label for="receiveMobile" class="col-xs-12 control-label">联系方式</label>
+            <div class="col-xs-12">
+                <input required type="tel" class="form-control" id="receiveMobile"
+                       placeholder="请输入联系手机或电话(无需填写区号)" maxlength="11">
+            </div>
+        </div>
+        <div class="form-gap clearfix">
+            <label for="cities" class="col-xs-12 control-label">省市区</label>
+            <div class="col-xs-12">
+                <div class="choose-wd">
+                    <select class="form-control" id="cities"
+                            disabled="disabled">
+                        <option value="1"></option>
+                    </select>
+                </div>
+                <div class="choose-wd-rt">
+                    <select class="form-control" id="areas">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-gap clearfix">
+            <label for="receiveAddress" class="col-xs-12 control-label">详细地址</label>
+            <div class="col-xs-12">
+                <input required type="text" class="form-control" id="receiveAddress"
+                       placeholder="请输入详细地址" maxlength="200">
+            </div>
+        </div>
+        <div class="form-gap clearfix">
+            <label class="col-xs-12 control-label">期望送达时间</label>
+            <div class="col-xs-12">
+                <select class="form-control" id="expectDate">
+                </select>
+            </div>
+        </div>
+        <!--<div class="form-gap clearfix">-->
+        <!--<input type="hidden" id="timeType" value="0">-->
+        <!--<label class="col-xs-12 control-label">期望送达时间</label>-->
+        <!--&lt;!&ndash;<div class="col-sm-3 col-xs-4">&ndash;&gt;-->
+        <!--&lt;!&ndash;<select class="form-control" id="timeType">&ndash;&gt;-->
+        <!--&lt;!&ndash;<option value="0">今天</option>&ndash;&gt;-->
+        <!--&lt;!&ndash;<option value="1">明天</option>&ndash;&gt;-->
+        <!--&lt;!&ndash;</select>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+        <!--<div class="col-xs-12">-->
+        <!--<select class="form-control" id="expectDate">-->
+        <!--</select>-->
+        <!--</div>-->
+        <!--</div>-->
+        <div class="form-gap clearfix">
+            <label for="productTypes" class="col-xs-12 control-label">商品类别</label>
+            <div class="col-xs-12">
+                <select class="form-control" id="productTypes">
+                </select>
+            </div>
+        </div>
+        <div class="form-gap clearfix">
+            <label for="shopOrderNo" class="col-xs-12 control-label">商家订单号</label>
+            <div class="col-xs-12">
+                <!--placeholder="请录入订单号或系统自动生成"-->
+                <input placeholder="请输入商家订单号" type="text" class="form-control" id="shopOrderNo" maxlength="23">
+            </div>
+        </div>
+        <div class="form-gap clearfix">
+            <label for="machineNo" class="col-xs-12 control-label">机号</label>
+            <div class="col-xs-12">
+                <!--placeholder="请录入订单号或系统自动生成"-->
+                <input placeholder="请输入机号" type="text" class="form-control" id="machineNo" maxlength="10">
+            </div>
+        </div>
+        <div class="form-gap clearfix">
+
+            <label for="captcha" class="col-xs-12 control-label">验证码</label>
+            <div class="col-xs-6">
+                <input placeholder="点击图片刷新" type="text" class="form-control" id="captcha" name="captcha" maxlength="4">
+            </div>
+            <div class="col-xs-6 verifiCodeImg">
+                <img alt="点击刷新" title="点击刷新" id="captchaImage">
+            </div>
+        </div>
+    </form>
+    <!--<div class="orderInfo-hd"><i class="fa fa-map-marker"></i>寄件人信息</div>-->
+    <div class="delivery-info">
+        <div class="form-gap clearfix">
+            <label for="pickupMobile" class="col-xs-12 control-label">寄件人联系方式</label>
+            <div class="col-xs-12"><input required type="text" placeholder="请输入手机号码" class="form-control"
+                                          id="pickupMobile" name="pickupMobile"
+                                          maxlength="11">
+            </div>
+        </div>
+        <div class="form-gap clearfix">
+            <label for="shopAddress" class="col-xs-12 control-label">取件地址</label>
+            <div class="col-xs-12"><input required type="text" class="form-control" disabled="disabled" id="shopAddress"
+                                          name="shopAddress"
+                                          maxlength="11">
+            </div>
+        </div>
+        <div class="btn-box">
+            <button id="createOrder" class="btn btn-primary btn-sure" data-toggle="modal">确认下单</button>
+        </div>
+    </div>
+
+    <!-- 模态框（Modal） start-->
+    <div class="modal fade" id="myModal" tabindex="-1" data-backdrop="static" role="dialog"
+         aria-labelledby="myModalLabel"
+         aria-hidden="true"
+         style="top:50%; margin-top:-74px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-sty">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                </div>
+                <div id="modalBody" class="modal-body"></div>
+                <div class="modal-footer modal-footer-sty">
+                    <button id="btn_ok" type="button" class="btn btn-primary btn-w" data-dismiss="modal">OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框（Modal） end-->
+</body>
+<script src="js/systemConfig.js"></script>
+<script src="js/plugin.js"></script>
+<script src="js/orderEntrance.js"></script>
+</html>

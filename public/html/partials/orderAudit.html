@@ -1,0 +1,94 @@
+<div class="row">
+
+    <div class="col-sm-12">
+    <!-- general form elements -->
+      <div class="box box-primary">
+
+          <form class="form-horizontal">
+              <div class="box-body">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label  class="col-sm-4 control-label" for="telephone">收件人手机</label>
+
+                      <div class="col-sm-7">
+                        <input ng-model="query.receiveMobile" type="text" placeholder="收件人手机" id="telephone" class="form-control"
+                               ng-maxlength="20" maxlength="20">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label  class="col-sm-4 control-label" for="status">状态</label>
+
+                      <div class="col-sm-7">
+ 
+                        <select ng-model='selector.selectedOption' class="form-control" id="status"
+                                ng-options="option.name for option in selector.availableOptions track by option.id" >
+                        </select>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-5">
+                      <div class="form-group">
+                      <label  class="col-sm-3  control-label">下单时间</label>
+                      <div class="col-sm-4  data-box">
+                        <!--<input ui-date class="form-control" id="startDate">-->
+                         <input ui-date class="form-control" ng-model="startDate">
+                          <span class="icon-calendar1"></span>
+                      </div>
+                      <div class="col-sm-4  data-box">
+                        <!--<input ui-date class="form-control" id="endDate">-->
+                         <input ui-date class="form-control" ng-model="endDate">
+                          <span class="icon-calendar1"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+             
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                  <button id="print" class="btn btn-info" type="submit" ng-disabled="loading" ng-click="audit()">审核并打印</button>
+                  <!--<button id="export" class="btn btn-info mar-lt-10" type="submit" ng-disabled="loading">导出</button>-->
+                  <button id="query" class="btn btn-info pull-right" type="submit" ng-disabled="loading" ng-click="search()">查询</button>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+
+          <!-- form end -->
+      </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box">
+      <div class="box-header with-border">
+        <h3 class="box-title">待审核订单</h3>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+         <!--dataTable-->
+        <ocs-data-table table-obj="orderAuditTable"></ocs-data-table>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer clearfix">
+          <ul class="pagination pagination-sm no-margin pull-left">
+              <li><label class="col-sm-12 control-label">第{{currentPage}}页，共{{pageCount}}页，订单数：{{totalCount}}</label></li>
+          </ul>
+        <ul class="pagination pagination-sm no-margin pull-right">
+            <li><a href="" ng-click="first()">第一页</a></li>
+            <li><a href="" ng-click="previous()">上一页</a></li>
+          <!--<li><a>...</a></li>-->
+            <!--<li><a href="#">10</a></li>-->
+            <li><a href="" ng-click="next()">下一页</a></li>
+            <li><a href="" ng-click="last()">最后一页</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+<!-- /.col -->
+</div>

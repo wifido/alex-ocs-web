@@ -1,0 +1,237 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="box box-primary" id="primary-height">
+            <div class="box-header with-border">
+                <h3 class="box-title">店铺基本信息展示</h3>
+            </div>
+            <div class="store-show">
+                <div class="row">
+                    <div class="part-title"><span class="nub">1</span>店铺信息</div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>内部编码</label>
+                                <span class="infor-detail">{{query.shopCode}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>商家编码</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>店铺编码</label>
+                                <span class="infor-detail">{{query.clientCode}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>店铺名称</label>
+                                <span class="infor-detail">{{query.shopName}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>联系人</label>
+                                <span class="infor-detail">{{query.linkman}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>手机号码</strong>
+                                    <span class="infor-detail">{{query.linkmanPhone}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>店铺区域</label>
+                                <span class="infor-detail">{{query.provinceName}}</span>
+                                <span class="infor-detail">{{query.cityName}}</span>
+                                <span class="infor-detail">{{query.areaName}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"
+                                       for="query.shopAddress"><span class="tsred">* </span>详细地址</label>
+                                <span class="infor-detail">{{query.shopAddress}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--店铺信息 end-->
+            <div class="store-show">
+                <div class="row">
+                    <div class="part-title"><span class="nub">2</span>资质信息</div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>姓名</label>
+                                <span class="infor-detail">{{query.shopCode}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>身份证号</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>手持身份证照片</label>
+                                <span class="infor-detail"><div class="prepare-pic3"><img src="../images/pic-id.jpg"></div></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>营业执照照片</label>
+                                <span class="infor-detail"><div class="prepare-pic3"><img src="../images/pic-licence.jpg"></div></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="show-infor">
+                                <label class="infor-tit">其他资质照片</label>
+                                <span class="infor-detail"><div class="prepare-pic3"><img src="../images/pic-permit.jpg"></div></span>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+            <!--资质信息 end-->
+            <div class="store-show">
+                <div class="row">
+                    <div class="part-title"><span class="nub">3</span>配送信息</div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>配送时效分数</label>
+                                <span class="infor-detail">{{query.shopCode}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>配送计价</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>商品类别</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>费用类型</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>计算方式</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>费用</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>计算维度</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>开始区间</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>结束区间</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--配送信息 end-->
+            <div class="store-show">
+                <div class="row">
+                    <div class="part-title"><span class="nub">4</span>绑定顺丰速运账号信息</div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>顺丰速运账号</label>
+                                <span class="infor-detail">{{query.shopCode}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>开户行</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>开户行姓名</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>开户行银行卡号</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="show-infor">
+                                <label class="infor-tit"><span class="tsred">* </span>账户类型</label>
+                                <span class="infor-detail">{{query.parentShopCode}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--绑定顺丰速运账号信息 end-->
+         </div>
+    </div>
+</div>
+
+

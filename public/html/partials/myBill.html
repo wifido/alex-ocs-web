@@ -1,0 +1,140 @@
+<div class="row">
+    <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">我的账户</h3>
+            </div>
+            <div class="bill-cont">
+                <div class="hd">账户余额：<strong class="tsred">￥320元</strong></div>
+                <div class="cont">
+                    <ul class="balance-ul ">
+                        <li>
+                            <div class="amount">可提取余额：<strong class="tsred">￥20</strong></div>
+                            <div class="operation"><button class="btn disabled">充值</button>
+                                <button  class="btn  btn-red">提现</button></div>
+                        </li>
+                        <li>
+                            <div class="amount">配送费余额：<strong class="tsred">￥20</strong></div>
+                            <div class="operation"><button  class="btn  btn-red" data-toggle="modal" data-target="#rechargeModal">充值</button>
+                                <!-- 按钮触发模态框 -->
+                            </div>
+                        </li>
+                        <li>
+                            <div class="amount">保证金余额：<strong class="tsred">￥280</strong></div>
+                            <div class="operation"><button  class="btn  btn-red" data-toggle="modal" data-target="#rechargeModal">充值</button></div>
+                            <!-- 按钮触发模态框 -->
+                        </li>
+                    </ul>
+                </div>
+                <div class="hd">配送费交易记录</div>
+                <div class="cont">
+                    <div class="choose-box clearfix">
+                         <div class="cheek-choose">查询日期：<a href="javascript:void(0);" >今天</a> <a href="javascript:void(0);" >昨天</a><a href="javascript:void(0);" >本周</a><a href="javascript:void(0);" >本月</a> <a href="javascript:void(0);" >自定义</a></div>
+                            <div class="data-box">
+                                <input ui-date="" class="form-control ng-untouched ng-valid hasDatepicker ng-not-empty ng-dirty ng-valid-parse ng-valid-ui-date-validator" ng-model="startDate" id="dp1474870733852">
+                                <span class="icon-calendar1"></span>
+                            </div>
+                            <div class="data-box">
+                                <input ui-date="" class="form-control ng-untouched ng-valid hasDatepicker ng-not-empty ng-dirty ng-valid-parse ng-valid-ui-date-validator" ng-model="startDate" id="dp1474870733852">
+                                <span class="icon-calendar1"></span>
+                            </div>
+                            <div class="choose-btn">
+                                <button id="query" class="btn btn-info " type="submit" ng-disabled="loading" ng-click="search()">查询</button>
+                            </div>
+                       </div>
+                       <div class="">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="table01">
+                                <tr>
+                                    <th>交易日期</th>
+                                    <th>充值 | 支出</th>
+                                    <th>余额</th>
+                                    <th>相关操作</th>
+                                </tr>
+                                <tr>
+                                    <td>2016-09-09</td>
+                                    <td>支出</td>
+                                    <td>-290</td>
+                                    <td><a href="javascript:void (0)">详情</a></td>
+                                </tr>
+                                <tr>
+                                    <td>2016-09-19</td>
+                                    <td>充值</td>
+                                    <td>190</td>
+                                    <td><a href="javascript:void (0)">详情</a></td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+
+                    <div class="box-body" style="display: none;">
+                        <!--dataTable-->
+                        <ocs-data-table table-obj="paymentRecordsTable"></ocs-data-table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="rechargeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="top:50%; margin-top: -150px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-header-sty">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="">充值</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group clearfix">
+                    <label class="col-sm-2 control-label">充值类型</label>
+                    <div class="col-sm-10">
+                        <span class="radio-sty"><input type="radio" name="rechargeType" >配送费</span>
+                        <span class="radio-sty"><input type="radio" name="rechargeType">保证金</span>
+                    </div>
+
+                </div>
+                <div class="form-group clearfix">
+                    <label class="col-sm-2 control-label">充值金额</label>
+                    <div class="col-sm-10">
+                        <span class="radio-sty"><input type="radio" name=" amount">100元</span>
+                        <span class="radio-sty"><input type="radio" name="amount">200元</span>
+                        <span class="radio-sty"><input type="radio" name="amount">500元</span>
+                        <span class="radio-sty"><input type="radio" name="amount">800元</span>
+                        <span class="radio-sty"><input type="radio" name="amount">1000元</span>
+
+                        <div class="radio-sty-add"><input type="radio" name="amount">其他金额<input ng-model="" type="text" class="form-control ng-pristine ng-valid ng-not-empty ng-valid-maxlength ng-touched" id="" ng-value="" ng-maxlength="23" maxlength="23" value=""> 元</div>
+                    </div>
+
+                </div>
+                <div class="form-group clearfix">
+                    <label class="col-sm-12 control-label">付款方式</label>
+                    <ul class="pay-ul clearfix" id="pay-ul">
+                        <li><a href="javascript:void (0)"><img src="../images/pay-sm.png"><i class="fa fa-check"></i></a></li>
+                        <li><a href="javascript:void (0)"><img src="../images/pay-zfb.png"><i class="fa fa-check"></i></a></li>
+                        <li><a href="javascript:void (0)"><img src="../images/pay-ssf.png"><i class="fa fa-check"></i></a></li>
+                        <li><a href="javascript:void (0)"><img src="../images/pay-wx.png"><i class="fa fa-check"></i></a></li>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="modal-footer modal-footer-sty">
+                <button type="button" class="btn btn-primary btn-sure-add" >确认充值</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#pay-ul li a").each(function(){
+            $(this).click(function(){
+                $("#pay-ul li a.active").removeClass("active");
+                $(this).addClass("active");
+                return false;
+            });
+        });
+    })//付款方式选中js
+</script>

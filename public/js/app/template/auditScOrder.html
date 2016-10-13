@@ -1,0 +1,167 @@
+<div class="modal fade" id="auditScOrderModal" role="dialog" aria-labelledby="auditScOrderModalLabel">
+    <div class="modal-dialog modal-dialog-wid-850" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    订单审核
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" name="modalForm">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="area" class="col-sm-3 col-xs-12 control-label">省市区</label>
+
+                            <div class="col-sm-3 col-xs-6">
+                                <input type="text" class="form-control" ng-value="auditOrder.provinceName"
+                                       disabled="true">
+                            </div>
+                            <div class="col-sm-3 col-xs-6">
+                                <input type="text" class="form-control" ng-value="auditOrder.cityName" disabled="true">
+                            </div>
+                            <div class="col-sm-3 col-xs-6">
+                                <select ng-model="auditOrder.areaSelector.selectedOption" class="form-control" id="area"
+                                        ng-options="option.name for option in auditOrder.areaSelector.availableOptions track by option.id">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="receiveAddress" class="col-sm-3 col-xs-12 control-label">收件详细地址</label>
+
+                            <div class="col-sm-9 col-xs-9"
+                                 ng-class="{ 'has-error': modalForm.receiveAddress.$invalid }">
+                                <input name="receiveAddress" ng-model="auditOrder.receiveAddress" type="text"
+                                       class="form-control"
+                                       id="receiveAddress"
+                                       ng-maxlength="200" maxlength="200" required ng-blur="calDistance()"/>
+                                <span ng-show="modalForm.receiveAddress.$error.required"
+                                      class="help-block">请输入收件详细地址</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="receiveContacts" class="col-sm-3 control-label">收件人</label>
+
+                            <div class="col-sm-3" ng-class="{ 'has-error': modalForm.receiveContacts.$invalid }">
+                                <input name="receiveContacts" ng-model="auditOrder.receiveContacts" type="text"
+                                       class="form-control required" id="receiveContacts" ng-maxlength="20"
+                                       maxlength="20" required/>
+                                <span ng-show="modalForm.receiveContacts.$error.required"
+                                      class="help-block">请输入收件人</span>
+                            </div>
+                            <label for="receiveMobile" class="col-sm-3 control-label">收件联系方式</label>
+
+                            <div class="col-sm-3" ng-class="{ 'has-error': modalForm.receiveMobile.$invalid }">
+                                <input name="receiveMobile" ng-model="auditOrder.receiveMobile" type="tel"
+                                       class="form-control"
+                                       id="receiveMobile" ng-maxlength="11" maxlength="11" pattern="0?1[3|4|5|7|8][0-9]\d{8}$|^[\d]{7,8}"
+                                       required/>
+                                <span ng-show="modalForm.receiveMobile.$error.required"
+                                      class="help-block">请输入联系方式</span>
+                                <span ng-show="!modalForm.receiveMobile.$error.required && modalForm.receiveMobile.$invalid"
+                                      class="help-block">请输入正确固话(无区号)或手机号</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weight" class="col-sm-3 control-label">重量</label>
+
+                            <div class="col-sm-3 col-xs-6">
+                                <select ng-model="auditOrder.weightSelector.selectedOption" class="form-control"
+                                        id="weight"
+                                        ng-options="option.name for option in auditOrder.weightSelector.availableOptions track by option.id">
+                                </select>
+                            </div>
+                            <label for="pickupMobile" class="col-sm-3 control-label">寄件人手机号</label>
+
+                            <div class="col-sm-3" ng-class="{ 'has-error': modalForm.pickupMobile.$invalid }">
+                                <input name="pickupMobile" ng-model="auditOrder.pickupMobile" type="tel"
+                                       class="form-control"
+                                       id="pickupMobile" pattern="1[3|4|5|7|8]\d{9}"
+                                       ng-maxlength="11" maxlength="11" required/>
+                                <span ng-show="modalForm.pickupMobile.$error.required"
+                                      class="help-block">请输入寄件人手机</span>
+                                <span ng-show="!modalForm.pickupMobile.$error.required && modalForm.pickupMobile.$invalid"
+                                      class="help-block">请输入正确手机号</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newShopOrderNo" class="col-sm-3 control-label">商家订单号</label>
+
+                            <div class="col-sm-9" ng-class="{ 'has-error': modalForm.newShopOrderNo.$invalid }">
+                                <input name="newShopOrderNo" ng-model="auditOrder.newShopOrderNo" type="text"
+                                       class="form-control"
+                                       id="newShopOrderNo" pattern="[0-9a-zA-Z]*"
+                                       ng-maxlength="20" maxlength="20" required/>
+                                <span ng-show="modalForm.newShopOrderNo.$error.required"
+                                      class="help-block">请输入商家订单号</span>
+                                <span ng-show="!modalForm.newShopOrderNo.$error.required && modalForm.newShopOrderNo.$invalid"
+                                      class="help-block">请输入正确的商家订单号: 由数字和字母组成</span>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label for="machineNo" class="col-sm-3 control-label">机号</label>
+
+                            <div class="col-sm-3" ng-class="{ 'has-error': modalForm.machineNo.$invalid }">
+                                <input name="machineNo" ng-model="auditOrder.machineNo" type="text"
+                                       class="form-control"
+                                       id="machineNo" pattern="[0-9a-zA-Z]*"
+                                       ng-maxlength="10" maxlength="10" required/>
+                                <span ng-show="modalForm.machineNo.$error.required"
+                                      class="help-block">请输入机号</span>
+                                <span ng-show="!modalForm.machineNo.$error.required && modalForm.machineNo.$invalid"
+                                      class="help-block">请输入正确机号</span>
+                            </div>
+
+                            <label  class="col-sm-3 control-label">实际配送距离</label>
+                            <div class="col-sm-3 col-xs-6">
+                                <label class="text-warning control-label">{{auditOrder.distance}}</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expectTime" class="col-sm-3 control-label">期望送达时间</label>
+
+                            <div class="col-sm-3 col-xs-6">
+                                <select ng-model="auditOrder.expectTimeSelector.selectedOption" class="form-control"
+                                        id="expectTime"
+                                        ng-options="option.name for option in auditOrder.expectTimeSelector.availableOptions track by option.id">
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+
+                            <div class="col-sm-9" >
+                                <span ng-show="auditOrder.expectTimeWarn"
+                                      class="text-danger">客户选择的时间{{auditOrder.expectDatePeriod}}已经超过时效，默认选择下个时间段</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- /.box-footer -->
+                    <div class="modal-footer">
+                        <button id="btn_cancel" type="button" class="btn btn-default">取消</button>
+                        <button id="btn_ok" class="btn btn-primary" ng-disabled="modalForm.$invalid"
+                                ng-class="{ 'disabled': modalForm.$invalid }">
+                            审核并打印
+                        </button>
+                    </div>
+                </form>
+                <!-- form end -->
+            </div>
+
+        </div>
+    </div>
+</div>

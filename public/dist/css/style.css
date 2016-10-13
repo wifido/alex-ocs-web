@@ -1,9 +1,13 @@
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;}
+input,select,textarea{
+    outline:none;
+}
 #mapContainer {
 
     width: 100%;
     height: 460px;
 }
-
 /** widget-box **/
 .widget-box{
     background: none repeat scroll 0 0 #f9f9f9;
@@ -148,7 +152,7 @@
 }
 .site-stats li strong {
     font-weight: 400;
-    font-size: 40px;
+    font-size: 38px;
     margin-left:0px;
 }
 .site-stats li small {
@@ -156,18 +160,19 @@
     font-size: 14px;
     width:100%; float:left;
 }
-
-
-
 .site-stats-4 {
     margin: 5px;
     padding: 0; text-align:center;
     list-style: none;
 }
 .site-stats-4 li {
-    cursor: pointer; display:inline-block;
-    margin: 0px 10px 15px 10px; text-align:center; width:20%;
-    padding:10px 0; color:#333;
+    cursor: pointer;
+    display:inline-block;
+    margin: 0px 10px 15px 10px;
+    text-align:center;
+    width:20%;
+    padding:10px 0;
+    color:#333;
     height: 100px;
     position: relative;
 }
@@ -182,7 +187,7 @@
 }
 .site-stats-4 li strong {
     font-weight: 400;
-    font-size: 42px;
+    font-size: 38px;
     margin-left:0px;
 }
 .site-stats-4 li small {
@@ -591,9 +596,552 @@
     .data-box{
     margin-bottom: 10px;}
     .box-footer .btn-info{
-        width: 40%;
+        width: 28%;
     }
 }
 /*End web815 样式优化*/
 
+/**start web 0919*/
+.etDropdwon {
+}
+.etDropdwon button{
+    width: 100%;
+    display: block;
+}
+.etDropdwon button .caret{
+    margin-left:5px;
+}
+.etDropdwon .dropdown-menu{
+    position: absolute;
+    top:33px;
+    left:auto;
+    right:0px;
+    width:300px;
+    height: 110px;
+    overflow: auto;
+}
+.etDropdwon  .dropdown-menu li {
+    width: 25%;
+    float: left;
+    display: block;
+    text-align:center;
+    cursor:pointer;
+}
+.etDropdwon  .dropdown-menu li a{
+    text-align: center;
+    padding:3px 5px;
+    display: block;
+}
+.btn-radius{
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:3px;
+}
+input:-webkit-autofill{
+    background-color: transparent;
+    background-image: none;
+}
+.btn-reset-width{
+    width:75px;
+}
+.btn-fullsize{
+    width: 100%;
+}
+.btn-halfsize{
+    width: 50%;
+}
+.mar-lt-10{
+    margin-left: 10px;
+}
+.btn{
+    border-radius: 5px;
+}
+.process-box{
+    padding:0px 10px;
+}
+.progress{
+    height: 12px; !important;
+    border-radius: 6px;
+    background-color:#eee !important;
+}
+/**end web 0919*/
+/**start 中小商家注册*/
+.prepare-material{
+    padding:15px;
+}
+.prepare-material .hd{
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.meterail-dl{
+}
+.meterail-dl .nub{
+    background: #3c8dbc;
+    width: 28px;
+    height: 28px;
+    line-height:28px;
+    font-size: 16px;
+    font-family: Arial;
+    display: inline-block;
+    border-radius: 100%;
+    color:#fff;
+    text-align: center;
+    margin-right: 8px;
+    position: absolute;
+    left:0px;
+    top:0px
+}
+.meterail-dl dt{
+    font-weight: normal;
+    margin: 10px 0px;
+    display: block;
+    position: relative;
+    padding-left: 40px;
+}
+.meterail-dl .tsgray{
+    color: #999;
+    font-weight: normal;
+    margin-left: 10px;
+}
+.meterail-dl dt p{
+    line-height: 28px;
+}
+.meterail-dl dd{
+    padding-left:40px;
+    display: block;
+    margin-bottom: 20px;
+}
+.meterail-dl dd p{
+    line-height: 28px;
+    margin-top: 10px;
+}
+.btn-center-box{
+    padding: 20px 0px;
+    margin:0px auto;
+    text-align: center;
+}
+.btn-center-box .btn{
+    width: 120px;
+    padding:8px 12px;
+}
+/*step */
+.steps-box{
+    padding: 25px 0px 10px;
+}
+.steps {
+    position: relative;
+    margin-bottom: 10px;
+    counter-reset: step;  /*创建步骤数字计数器*/
+    padding-start:0px!important;
+    -webkit-padding-start: 0px!important;
+}
+/*步骤描述*/
+.steps li {
+    list-style-type: none;
+    font-size: 14px;
+    text-align: center;
+    width: 20%;
+    position: relative;
+    float: left;
+}
+/*步骤数字*/
+.steps li:before {
+    display: block;
+    content: counter(step); /*设定计数器内容*/
+    counter-increment: step;  /*计数器值递增*/
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+    border-radius: 42px;
+    background:#009dd9;
+    color:#fff;
+    /*text-indent:-9999px;
+    overflow:hidden;*/
+    font-size: 18px;
+    text-align: center;
+    font-weight: 700;
+    margin: 0 auto 8px auto;
+    position: relative;
+    z-index: 11;
+}
+/*连接线*/
+.steps li ~ li:after{
+    content: '';
+    width: 100%;
+    height: 2px;
+    background-color: #009dd9;
+    position: absolute;
+    left: -50%;
+    top: 21px;
+    z-index:2; /*放置在数字层后面*/
+}
+/*将当前/完成步骤之前连接线变绿*/
+.steps li.active:after {
+    background-color: #009dd9;
+}
+/*将当前/完成步骤之后的数字及连接线变灰*/
+.steps li.active ~ li:before,
+.steps li.active ~ li:after {
+    background-color: #999;
+}
+.tsred{
+    color:#ff0000;
+}
+.tsblue{
+    color: #3c8dbc;
+}
+.mar-rt10{
+    margin-right:10px;
+}
+.block-add{
+    width:180px;
+    height:130px;
+    background: #ddd;
+    cursor: pointer;
+    text-align: center;
+    position: relative;
+}
+.block-add:hover{
+    background:#ccc ;
+}
+
+
+.block-add i{
+    font-size:46px;
+    color:#999;
+    padding: 20px;
+}
+.block-add p{
+    position: absolute;
+    background: #333;
+    bottom:0px;
+    left:0px;
+    width:100%;
+    line-height:40px;
+    font-size: 14px;
+    height:40px;
+    overflow: hidden;
+    margin: 0px;
+    color:#fff;
+}
+.prepare-pic2{
+    width: 180px;
+    height:130px;
+}
+.prepare-pic2 img{
+    width: 100%;
+    height:100%;
+}
+.prepare-pic3{
+    width: 140px;
+    height: 94px;
+}
+.prepare-pic3 img{
+    width: 100%;
+    height:100%;
+}
+.pic-demand{
+    padding-top:20px;
+}
+@media (max-width: 768px){
+    .block-add {
+        width: 140px;
+        height: 94px;
+    }
+    .prepare-pic2{
+        width: 140px;
+        height: 94px;
+    }
+    .block-add i{
+        font-size:30px;
+        padding: 15px;
+    }
+    .block-add p{
+        height: 30px;
+        line-height:30px;
+        font-size: 10px;
+    }
+    .btn-center-box .btn{
+        width: 100px;
+        padding:6px 12px;
+    }
+}
+@media (min-width: 768px) and (max-width: 1024px)  {
+    .form-horizontal label.col-xs-12{
+        text-align: left;
+    }
+}
+.binding-content {
+    border-top: 1px dotted #ccc;
+    padding: 20px 0px;
+}
+.form-radio{
+    padding-top: 7px;
+    margin-right: 20px;
+    display: inline-block;
+}
+.verifying,
+.successAudit{
+    text-align:center;
+    padding:80px 0px;
+}
+.verify-cont{
+    text-align:center;
+}
+.verifying .tips-txt{
+    font-size:12px;
+    line-height:30px;
+    text-align:center;
+    color:#ff0000;
+
+}
+.verify-cont p{
+    font-size:18px;
+    line-height:30px;
+    font-family:"Microsoft yahei";
+}
+.icon-verifying{
+    background:url(../../images/icon-zoom.png)  0px 0px no-repeat;
+    width:64px;
+    height:64px;
+    display:inline-block;
+
+}
+.icon-success{
+    background:url(../../images/icon-yes.png)  0px 0px no-repeat;
+    width:64px;
+    height:64px;
+    display:inline-block;
+
+}
+#primary-height{
+    margin: 0px;
+}
+.skin-blue .sidebar-menu > li.header{
+    color:#b8c7ce;
+}
+/*账务管理*/
+.bill-cont{
+    padding: 15px;
+}
+.bill-cont .hd{
+    font-size: 16px;
+    line-height: 32px;
+    margin-bottom: 10px;
+}
+.bill-cont .hd::before{
+    content: "";
+    width: 3px;
+    height:15px;
+    display: inline-block;
+    line-height: 0px;
+    overflow: hidden;
+    margin-right: 10px;
+    background: #0370e0;
+    vertical-align: middle;
+}
+.bill-cont .hd strong{
+    color: #ff0000;
+}
+.bill-cont .cont{
+    padding-left:10px;
+}
+.balance-ul{
+    display: flex;
+    padding: 0px;
+    margin-bottom: 10px;
+    flex-flow: row wrap;
+}
+.balance-ul li{
+    list-style: none;
+    flex: 1;
+    font-size: 14px;
+    background: #ecf4fc;
+    border:1px dotted #ccc;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 5px;
+    min-width:180px;
+}
+.balance-ul .amount{
+}
+.balance-ul .operation{
+    float: right;
+    padding-top: 10px;
+}
+.balance-ul li .btn{
+    padding: 4px 12px;
+    margin-left: 8px;
+}
+button.btn-red{
+    background: #f66a04;
+    border: 1px solid #f16804;
+    color: #fff;
+}
+.btn-red:focus,
+.btn-red.focus,
+.btn-red:visited,
+.btn-red:hover,
+.btn-red:active{
+    background: #ff710a;
+    border: 1px solid #ff3000;
+    color: #fff;
+}
+.choose-box{
+    margin-bottom: 15px;
+}
+.choose-box .cheek-choose{
+    float: left;
+    width: 320px;
+    line-height:34px;
+    height:34px;
+}
+.cheek-choose a{
+    margin-right: 15px;
+}
+.choose-box .data-box{
+    width: 150px;
+    float: left;
+}
+.choose-box .choose-btn{
+    margin-left:20px;
+    float: left;
+}
+.modal-header{
+    border-radius: 5px 5px 0px 0px;
+    background: #f2f2f2;
+}
+.modal-footer-sty{
+    border: 0 none!important;
+    text-align: center!important;
+    padding-top: 0px;
+}
+.modal-title{
+    font-family: "Microsoft yahei";
+}
+.btn-sure-add{
+    width: 120px;
+    padding: 8px 12px;
+}
+.pay-ul{
+    padding-top: 25px;
+}
+.pay-ul li{
+    width: 116px;
+    float: left;
+    list-style: none;
+    margin-right: 10px;
+}
+.pay-ul li a{
+    height: 40px;
+    padding:2px;
+    width: 116px;
+    border: 1px solid #ccc;
+    display:block;
+    position: relative;
+}
+.pay-ul li a:hover,
+.pay-ul li a.active{
+    border: 2px solid #69af05;
+    padding: 1px;
+}
+.pay-ul li a img{
+    height:34px;
+}
+.pay-ul li a i{
+    color:#69af05;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    font-size: 16px;
+    display: none;
+}
+.pay-ul li a:hover i,
+.pay-ul li a.active i{
+    display: block;
+}
+.radio-sty{
+    width:85px;
+    display: inline-block;
+}
+.radio-sty-add{
+    padding-top: 10px;
+}
+.radio-sty-add .form-control{
+    width: 150px;
+    display: inline-block;
+    margin-left: 20px;
+}
+.table01{
+    border-collapse: collapse;
+}
+.table01 tr th{
+    border: 1px solid #ddd;
+    background: #efefef;
+    padding: 8px 12px;
+    text-align: center;;
+}
+.table01 tr td{
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    text-align: center;;
+}
+.billList{
+    padding:20px;
+}
+.billList .title{
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+.billList .cont{
+}
+.listDetail{
+    line-height:32px;
+    margin-bottom: 20px;
+}
+.part-title{
+    font-size: 16px;
+    line-height: 28px;
+    margin-bottom: 10px;
+    padding-left:15px;
+}
+.part-title .nub{
+    background: #3c8dbc;
+    width: 28px;
+    height: 28px;
+    line-height:28px;
+    font-size: 16px;
+    font-family: Arial;
+    display: inline-block;
+    border-radius: 100%;
+    color:#fff;
+    text-align: center;
+    margin-right: 8px;
+}
+.show-infor{
+    padding:10px;
+    position: relative;
+    display: table;
+}
+.show-infor .infor-tit{
+    margin-bottom: 0;
+    text-align: right;
+    width: 140px;
+    padding:0px 15px;
+    line-height: 20px;
+    display: table-cell;
+    vertical-align: top;
+}
+.show-infor .infor-detail{
+    display: table-cell;
+    vertical-align: top;
+}
+.store-show{
+    padding:15px 20px;
+    border-bottom: 1px solid #eee;
+}
+.w100{ width: 100px!important;}
 

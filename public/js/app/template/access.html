@@ -1,9 +1,21 @@
 <ul class="sidebar-menu">
+    <li ng-if="normal" class="header">合作申请</li>
+    <li ng-if="normal && nStore" ui-sref-active="active"><a ui-sref="main.storeList"><i
+            class="fa fa-circle-o"></i><span>我的店铺</span></a></li>
+    <li ng-if="normal && nStore" ui-sref-active="active"><a ui-sref="main.storeCreate"><i
+            class="fa fa-circle-o"></i><span>新建店铺</span></a></li>
+    <li ng-if="normal" class="header">账务管理</li>
+    <li ng-if="normal && nStore" ui-sref-active="active"><a ui-sref="main.myBill"><i
+            class="fa fa-circle-o"></i><span>我的账单</span></a></li>
+    <li ng-if="normal && nStore" ui-sref-active="active"><a ui-sref="main.billList"><i
+            class="fa fa-circle-o"></i><span>对账列表</span></a></li>
     <li ng-if="normal" class="header">订单管理</li>
     <li ng-if="normal && nStore" ui-sref-active="active"><a ui-sref="main.orderCreate"><i
             class="fa fa-circle-o"></i><span>订单录入</span></a></li>
     <li ng-if="normal && nStore" ui-sref-active="active"><a ui-sref="main.orderList"><i
             class="fa fa-circle-o"></i><span>订单列表</span></a></li>
+    <li ng-if="normal && nStore" ui-sref-active="active"><a ui-sref="main.orderAudit"><i
+            class="fa fa-circle-o"></i><span>待审核订单</span></a></li>
     <li ng-if="important" class="header">门店管理</li>
     <li ng-if="important && iStore" ui-sref-active="active"><a ui-sref="main.storeManager"><i class="fa fa-circle-o"></i><span>店铺管理</span></a>
     </li>

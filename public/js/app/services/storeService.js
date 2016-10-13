@@ -14,6 +14,15 @@ define([
                     },
                     shopProductType: function (opts) {
                         return promiseService.getPromise(SystemConfig.url_productType, opts, 'POST');
+                    },
+                    shopWeightOption: function () {
+                        return promiseService.getPromise(SystemConfig.url_weightOption, null, 'POST');
+                    },
+                    shopExpectTimeOption: function (opts) {
+                        return promiseService.getPromise(SystemConfig.url_expectTimeOption, opts, 'POST');
+                    },
+                    shopCalDistance: function (opts) {
+                        return promiseService.getPromise(SystemConfig.url_calDistance, opts, 'POST');
                     }
                 };
             }
@@ -21,6 +30,18 @@ define([
         .service('storeBiz', ['$http', '$q', '$cookies', '$base64', 'promiseService', 'SystemConfig',
             function ($http, $q, $cookies, $base64, promiseService, SystemConfig) {
                 return {
+					saveStore: function(opts){
+						return promiseService.getPromise(SystemConfig.url_createStore, opts, 'POST');
+					},
+                    getDistInfos: function (opts) {
+                        return promiseService.getPromise(SystemConfig.url_getDistInfos, opts, "POST");
+                    },
+					getShopInfo: function (opts){
+						return promiseService.getPromise(SystemConfig.url_getShopInfo, opts, "POST");
+					},
+                    getStoreInfoList: function (opts) {
+                        return promiseService.getPromise(SystemConfig.url_storeInfoList, opts, "POST");
+                    },
                     getStoreLocation: function (opts) {
                         return promiseService.getPromise(SystemConfig.url_storeList, opts, "POST");
                     },

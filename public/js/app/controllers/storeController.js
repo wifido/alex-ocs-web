@@ -678,7 +678,842 @@ define([
                     $('#applyForResourceModal').modal('hide');
                 };
             }])
-        //商家管理
+        //店铺列表
+        .controller('storeListCtrl', ['$scope', '$rootScope', '$state', '$cookies', '$interval', 'storeBiz', 'authBiz', 'CacheBiz', 'SystemConfig', '$ocsPopup',
+            function ($scope, $rootScope, $state, $cookies, $interval, storeBiz, authBiz, CacheBiz, SystemConfig, $ocsPopup) {
+                //$('[data-toggle="tooltip"]').tooltip();
+                //init
+                $scope.totalCount = 0;//总数
+                $scope.currentPage = 1;//当前页
+                $scope.pageCount = 0;//页数
+                $scope.pageSize = 10;//每页条数
+                $scope.loading = false;//数据加载标记
+
+                $scope.query = {
+                    shopCode: '',//商铺编码
+					clientCode:'',
+					parentShopCode:'',
+                    contactMobile: '',//联系方式
+                    orderStatus: '0',//订单状态 0(全部)1(完成)2(异常)
+                    startDate: '',//开始时间
+                    endDate: '',//结束时间
+                    dateType: '',//日期范围 1-今天 2-最近7天 3-本月
+                    pageIndex: 1,//当前页
+                    pageSize: $scope.pageSize//页面条数
+                };
+				
+                //start storeListTable
+                var intervalPromise; //保存定时请求的对象,使用完之后需要进行销毁
+                $scope.storeListTable = {
+                    id: "storeListTable", //必须是id,通过jquery主键选择器获取
+                    columns: [
+                        {field: 'flag'},
+						{
+							field: 'number',
+							formatter: function (value, row, index) {
+								return index+1;
+							}
+						},
+                        {field: 'shopId', visible: false},
+                        {field: 'parentShopCode'},
+                        {field: 'shopName'},
+                        {field: 'linkman'},
+                        {field: 'linkmanPhone'},
+                        {field: 'createTm'},
+						{
+							field: 'auditType',
+							formatter: function (value, row, index) {
+								if(value=='1'){
+									return '已审核';
+								}else if(value=='0'){
+									return '未审核';
+								}else{
+									return '待完善';
+								}
+								
+							}
+						},
+                        {
+							field: 'operation',
+							formatter: function (value, row, index) {
+								if(row.auditType=='1'){
+									return '<a style="cursor:pointer;text-decoration:none;">查看</a>';
+								}else {
+									return '<a style="cursor:pointer;text-decoration:none;">修改</a>';
+								}
+							}
+						}
+                    ],
+					//普通行点击事件
+                    clickRowCallback: function (e, row, $tr, $td) {
+                        if($td == "operation"){
+	                        if(row.auditType=='1'){
+								$state.go('main.storeShow', {shopId:row.shopId});
+							}else{
+								$state.go('main.storeEdit', {shopId:row.shopId});
+							}
+						}
+					},
+					successCallback: function (){
+						$scope.query.pageIndex = 1;
+						$scope.currentPage = 1;
+						$scope.query.merchantCode=$rootScope.authUser.parentShopCode;
+						getStores($scope.query);
+					},
+                    //权限控制回调函数
+                    accessControlCallback: function (){
+
+                    },
+					expandRowCallback: function (){
+						
+					},
+                    templateUrl: "js/app/template/storeListTable.html" //指令模板,可自行定制,遵循bootstrap-table格式
+                };
+                //end orderListTable
+                // 跳转到新建店铺页面
+                $scope.add = function () {
+					$state.go('main.storeCreate', {});
+                };
+				//数据初始化
+                $scope.initData = function () {
+
+				};
+                // 下一页
+                $scope.next = function () {
+                    if ($scope.loading) {
+                        return;
+                    }
+                    if ($scope.storeList.length == 0) {
+                        $ocsPopup.growl('请先查询', {type: 'danger'});
+                        return;
+                    }
+                    if ($scope.currentPage == $scope.pageCount) {
+                        $ocsPopup.growl('已经是最后一页', {type: 'info'});
+                        return;
+                    }
+                    $scope.currentPage++;
+                    $scope.query.pageIndex = $scope.currentPage;
+                    getStores($scope.query);
+                };
+                // 上一页
+                $scope.previous = function () {
+                    if ($scope.loading) {
+                        return;
+                    }
+                    if ($scope.storeList.length == 0) {
+                        $ocsPopup.growl('请先查询', {type: 'danger'});
+                        return;
+                    }
+                    if ($scope.currentPage == 1) {
+                        $ocsPopup.growl('已经是第一页', {type: 'info'});
+                        return;
+                    }
+                    $scope.currentPage--;
+                    $scope.query.pageIndex = $scope.currentPage;
+                    getStores($scope.query);
+                };
+                // 第一页
+                $scope.first = function () {
+                    if ($scope.loading) {
+                        return;
+                    }
+                    if ($scope.storeList.length == 0) {
+                        $ocsPopup.growl('请先查询', {type: 'danger'});
+                        return;
+                    }
+                    if ($scope.currentPage == 1) {
+                        $ocsPopup.growl('已经是第一页', {type: 'info'});
+                        return;
+                    }
+                    $scope.currentPage = 1;
+                    $scope.query.pageIndex = $scope.currentPage;
+                    getStores($scope.query);
+                };
+                // 最后一页
+                $scope.last = function () {
+                    if ($scope.loading) {
+                        return;
+                    }
+                    if ($scope.storeList.length == 0) {
+                        $ocsPopup.growl('请先查询', {type: 'danger'});
+                        return;
+                    }
+                    if ($scope.currentPage == $scope.pageCount) {
+                        $ocsPopup.growl('已经是最后一页', {type: 'info'});
+                        return;
+                    }
+                    $scope.currentPage = $scope.pageCount;
+                    $scope.query.pageIndex = $scope.currentPage;
+                    getStores($scope.query);
+                };
+                $scope.storeList = []; // 存储当页的订单列表
+                var getStores = function (condition) {
+                    $scope.loading = true;
+                    $ocsPopup.showLoading(true, $('#' + $scope.storeListTable.id));
+                    storeBiz.getStoreInfoList(condition).then(
+                        function (result) {
+                            $scope.loading = false;
+                            $ocsPopup.showLoading(false, $('#' + $scope.storeListTable.id));
+                            if (result.success) {
+                                $scope.totalCount = result.object.totalCount;
+                                if ($scope.totalCount == 0) {
+                                    $scope.pageCount = 0;
+                                }
+                                if (!$scope.totalCount) {
+                                    $scope.totalCount = 0;
+                                    $scope.pageCount = 0;
+                                } else {
+                                    $scope.pageCount = Math.ceil($scope.totalCount / $scope.pageSize)
+                                }
+                                // 保存当页订单列表数据
+                                $scope.storeList.length = 0;
+                                for (var i = 0; i < result.object.storeInfoList.length; i++) {
+                                    $scope.storeList.push(result.object.storeInfoList[i]);
+                                }
+                                $('#' + $scope.storeListTable.id).bootstrapTable('load', {
+                                    data: result.object.storeInfoList
+                                });
+                            } else {
+                                $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                            }
+                        }, function (errorResult) {
+                            $scope.loading = false;
+                            $ocsPopup.showLoading(false, $('#' + $scope.storeListTable.id));
+                            $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                        }
+                    );
+                }; // getStores end
+				
+            }
+        ])
+        //店铺新增
+        .controller('storeCreateCtrl', ['$rootScope', '$scope', '$state', 'storeBiz', '$ocsPopup', '$cookies', 'SystemConfig', 'shopBiz', 'CacheBiz', 'ValidateBiz',
+            function ($rootScope, $scope, $state, storeBiz, $ocsPopup, $cookies, SystemConfig, shopBiz, CacheBiz, ValidateBiz) {
+                //省份信息
+                $scope.province = {
+                    availableOptions: [{id:'0',name:'请选择省份'}],
+                    selectedOption: {id:'0',name:'请选择省份'}
+                };
+				//城市信息
+                $scope.city = {
+                    availableOptions: [{id:'0',name:'请选择城市'}],
+                    selectedOption: {id:'0',name:'请选择城市'}
+                };
+                //县区信息
+                $scope.areaSelector = {
+                    availableOptions: [{id:'0',name:'请选择县区'}],
+                    selectedOption: {id:'0',name:'请选择县区'}
+                };
+                $scope.query = {
+					shopCode: '',//内部编码
+					parentShopCode: '',//商家编码
+                    clientCode: '',//店铺编码
+                    shopName: '',//店铺名称
+                    linkman: '',//联系人
+                    linkmanPhone: '',//联系方式
+                    provinceName: '',//省份名称
+                    provinceCode: '',//省份编码
+                    cityName: '',//城市名称
+                    cityCode: '',//城市编码
+                    areaName: '',//县区名称
+                    areaCode: '',//县区编码
+                    shopAddress : '',//店铺地址
+					longitude: 0.0,//经度
+                    latitude: 0.0,//纬度
+					categoryType: '',//商户类别 1企业2个体
+					shopType: '',//商家类型 1普通2中高端3小B
+                    auditType : '',//审核状态
+					serviceType : '',
+					isShopFlag : '',
+					isPlatForm :'',
+					createEmp : '',
+					modifyEmp : '',
+					protocolAuditStatus : '',
+					priceAuditStatus : '',
+					distAreaCode : '',
+					billCityCode :'',
+					belongCityCode :'',
+					allowOrderFromClient:0
+                };
+
+                var map;//地图
+                var initMap = function () {
+                    $scope.localtionBtn = true;//定位按钮显示标记
+                    try {
+                        $("#storeCreateMapContainer").children().remove();
+                        map = new AMap.Map('storeCreateMapContainer', {
+                            center: [$rootScope.authUser.lng, $rootScope.authUser.lat],
+                            zoom: 12
+                        });
+                    } catch (e) {
+                        //如果地图加载失败,移除地图相关标签
+                        $("#storeCreateMapContainer").parent().remove();
+                        $scope.localtionBtn = false;
+                        $ocsPopup.growl('地图初始化失败,请检查网络', {type: 'danger', delay: 1000});
+                    }
+                };
+                //地址定位
+                $scope.gpsLocaltion = function () {
+                    var cityCode = $scope.city.selectedOption.name;//城市
+                    if (!cityCode) {
+                        $ocsPopup.growl('请选择城市代码', {type: 'danger', delay: 1000});
+                        return;
+                    }
+                    if (!$scope.query.shopAddress) {
+                        $ocsPopup.growl('请输入详细地址', {type: 'danger', delay: 1000});
+                        return;
+                    }
+                    try {
+                        AMap.service(["AMap.PlaceSearch"], function() {
+                            var placeSearch = new AMap.PlaceSearch({ //构造地点查询类
+                                pageSize: 5,
+                                pageIndex: 1,
+                                city: cityCode
+                            });
+                            //关键字查询
+                            placeSearch.search($scope.query.shopAddress, callback);
+                            var placeSearchRender = new Lib.AMap.PlaceSearchRender({
+                                finishCallback : function(element, data) {
+                                    //点击确定后回调逻辑
+                                    var text = element.find(".amap-lib-infowindow-content").prev(".amap-lib-infowindow-title")[0].innerText;
+                                    $scope.query.shopAddress = text.substr(2, text.indexOf('详情') - 2).trim();
+                                    $scope.query.longitude = data.location.lng;
+                                    $scope.query.latitude = data.location.lat;
+                                    $scope.$apply();
+                                }
+                            });
+                            function callback(status, result) {
+                                if (status === 'complete' && result.info === 'OK') {
+                                    placeSearchRender.autoRender({
+                                        placeSearchInstance: placeSearch,
+                                        panel: "panel",
+                                        methodName: "search",
+                                        methodArgumments: [$scope.query.shopAddress, callback],
+                                        data: result,
+                                        map: map
+                                    });
+                                }
+                            }
+                        });
+                    } catch (e) {
+                        $ocsPopup.growl('地图查询失败', {type: 'danger', delay: 1000});
+                    }
+                };
+				$scope.getArea = function () {
+                    //获取城市信息
+                    storeBiz.getDistInfos({typeCode: '4', parentDistCode: $scope.city.selectedOption.id}).then(function (result) {
+                        if (result.success && result.object.length > 0) {
+                            var areas = [];
+							areas.push({id: '0', name: '请选择县区'});
+                            for (var i = 0; i < result.object.length; i++) {
+                                areas.push({id: result.object[i].distCode, name: result.object[i].distCnName});
+                            }
+                            $scope.areaSelector.availableOptions = areas;
+                        } else {
+                            $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                        }
+                    }, function (errorResult) {
+                        $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                    });
+				};
+				$scope.getCity = function () {
+                    //获取城市信息
+                    storeBiz.getDistInfos({typeCode: '3', parentDistCode: $scope.province.selectedOption.id}).then(function (result) {
+                        if (result.success && result.object.length > 0) {
+                            var citys = [];
+							citys.push({id: '0', name: '请选择城市'});
+                            for (var i = 0; i < result.object.length; i++) {
+                                citys.push({id: result.object[i].distCode, name: result.object[i].distCnName});
+                            }
+                            $scope.city.availableOptions = citys;
+                        } else {
+                            $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                        }
+                    }, function (errorResult) {
+                        $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                    });
+				};
+                //数据初始化
+                $scope.initData = function () {
+                    //获取省份信息
+                    storeBiz.getDistInfos({typeCode: '2', parentDistCode: 'A000086000'}).then(function (result) {
+                        if (result.success && result.object.length > 0) {
+                            var provinces = [];
+							provinces.push({id: '0', name: '请选择省份'});
+                            for (var i = 0; i < result.object.length; i++) {
+                                provinces.push({id: result.object[i].distCode, name: result.object[i].distCnName});
+                            }
+                            $scope.province.availableOptions = provinces;
+                        } else {
+                            $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                        }
+                    }, function (errorResult) {
+                        $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                    });
+                    //加载地图
+                    initMap();
+                };
+                $scope.saveStore = function () {
+                    if (!$scope.query.shopName) {
+                        $ocsPopup.growl('请输入店铺名称', {type: 'danger'});
+                        $("#shopName")[0].focus();
+                        return;
+                    }
+                    if (!$scope.query.linkman) {
+                        $ocsPopup.growl('请输入联系人', {type: 'danger'});
+                        $("#linkman")[0].focus();
+                        return;
+                    }
+                    if (!$scope.query.linkmanPhone) {
+                        $ocsPopup.growl('请输入联系方式', {type: 'danger'});
+                        $("#linkmanPhone")[0].focus();
+                        return;
+                    }
+                    var mobileRe = /^1[3|4|5|7|8]\d{9}$/;
+                    var telRe = /^\d{7,8}$/;
+                    var telLen = $scope.query.linkmanPhone.length;
+                    if (telLen != 7 && telLen != 8 && telLen != 11) {
+                        $ocsPopup.growl('请输入正确的手机号码或电话', {type: 'danger'});
+                        $("#linkmanPhone")[0].focus();
+                        return;
+                    }
+                    if (telLen == 11 && !mobileRe.test($scope.query.linkmanPhone)) {
+                        $ocsPopup.growl('请输入正确的手机号码', {type: 'danger'});
+                        $("#linkmanPhone")[0].focus();
+                        return;
+                    }
+                    if ((telLen == 7 || telLen == 8) && !telRe.test($scope.query.linkmanPhone)) {
+                        $ocsPopup.growl('请输入正确的电话号码', {type: 'danger'});
+                        $("#linkmanPhone")[0].focus();
+                        return;
+                    }
+                    if (!$scope.query.shopAddress) {
+                        $ocsPopup.growl('请输入详细地址', {type: 'danger'});
+                        $("#shopAddress")[0].focus();
+                        return;
+                    }
+					
+					$scope.query.parentShopCode=$rootScope.authUser.parentShopCode;
+					$scope.query.provinceCode=$scope.province.selectedOption.id;
+					$scope.query.provinceName=$scope.province.selectedOption.name;
+					$scope.query.cityName=$scope.city.selectedOption.name;
+					$scope.query.cityCode=$scope.city.selectedOption.id;
+					$scope.query.areaName=$scope.areaSelector.selectedOption.name;
+					$scope.query.areaCode=$scope.areaSelector.selectedOption.id;
+					$scope.query.auditType='0';//未审核
+					$scope.query.categoryType='2';//个体
+					$scope.query.shopType='3';
+					$scope.query.country='CN';
+					$scope.query.createEmp=$rootScope.authUser.shopCode;
+					$scope.query.serviceType='SE0083';
+					$scope.query.billCityCode=$scope.city.selectedOption.id;
+					$scope.query.distAreaCode=$scope.areaSelector.selectedOption.id;
+					$scope.query.isShopFlag='0';
+					$scope.query.isPlatForm='0';
+					$scope.query.protocolAuditStatus='0';
+					$scope.query.priceAuditStatus='0';
+					$scope.query.allowOrderFromClient='0';					
+										
+                    storeBiz.saveStore($scope.query).then(
+                        function (result) {
+                            if (result.success) {
+                                $ocsPopup.growl('店铺创建成功', {type: 'success'});
+                            } else {
+                                $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                            }
+                        },
+                        function (errorResult) {
+                            $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                        }
+                    );
+                };
+            }
+        ])
+        //店铺编辑
+        .controller('storeEditCtrl', ['$rootScope', '$scope', '$state', '$stateParams', 'storeBiz', '$ocsPopup', '$cookies', 'SystemConfig', 'shopBiz', 'CacheBiz', 'ValidateBiz',
+            function ($rootScope, $scope, $state, $stateParams, storeBiz, $ocsPopup, $cookies, SystemConfig, shopBiz, CacheBiz, ValidateBiz) {
+                var shopId = $stateParams.shopId;
+				//省份信息
+                $scope.province = {
+                    availableOptions: [{id:'0',name:'请选择省份'}],
+                    selectedOption: {id:'0',name:'请选择省份'}
+                };
+				//城市信息
+                $scope.city = {
+                    availableOptions: [{id:'0',name:'请选择城市'}],
+                    selectedOption: {id:'0',name:'请选择城市'}
+                };
+                //县区信息
+                $scope.areaSelector = {
+                    availableOptions: [{id:'0',name:'请选择县区'}],
+                    selectedOption: {id:'0',name:'请选择县区'}
+                };
+                $scope.query = {
+					shopId:'',//主键
+					shopCode: '',//内部编码
+					parentShopCode: '',//商家编码
+                    clientCode: '',//店铺编码
+                    shopName: '',//店铺名称
+                    linkman: '',//联系人
+                    linkmanPhone: '',//联系方式
+                    provinceName: '',//省份名称
+                    provinceCode: '',//省份编码
+                    cityName: '',//城市名称
+                    cityCode: '',//城市编码
+                    areaName: '',//县区名称
+                    areaCode: '',//县区编码
+                    shopAddress : '',//店铺地址
+                    auditType : '',//审核状态
+					serviceType : '',
+					isShopFlag : '',
+					isPlatForm :'',
+					createTm : '',
+					createEmp : '',
+					modifyEmp : '',
+					protocolAuditStatus : '',
+					priceAuditStatus : '',
+					distAreaCode : '',
+					billCityCode :'',
+					belongCityCode :'',
+					allowOrderFromClient:0
+                };
+                              
+				var getShopInfo = function () {
+
+                    //获取商家或店铺信息
+                    storeBiz.getShopInfo({shopId: shopId}).then(function (result) {
+                        if (result.success && result.object) {
+							$("#shopId").val(result.object.shopId);
+							$("#shopCode").val(result.object.shopCode);
+							$("#clientCode").val(result.object.clientCode);
+							$("#createTm").val(result.object.createTm);
+							$("#createEmp").val(result.object.createEmp);
+							$("#isShopFlag").val(result.object.isShopFlag);
+							$("#isPlatForm").val(result.object.isPlatForm);
+							$("#protocolAuditStatus").val(result.object.protocolAuditStatus);
+							$("#priceAuditStatus").val(result.object.priceAuditStatus);
+							$("#allowOrderFromClient").val(result.object.allowOrderFromClient);
+							$("#auditType").val(result.object.auditType);
+							$("#longitude").val(result.object.longitude);
+							$("#latitude").val(result.object.latitude);
+		
+							$("#imagePath").val(result.object.imagePath);
+							$("#belongCityCode").val(result.object.belongCityCode);
+							
+							$scope.query.shopId = result.object.shopId;
+							$scope.query.shopCode = result.object.shopCode;
+							$scope.query.parentShopCode = result.object.parentShopCode;
+                            $scope.query.clientCode = result.object.clientCode;
+							$scope.query.shopName = result.object.shopName;
+							$scope.query.linkman = result.object.linkman;
+							$scope.query.linkmanPhone = result.object.linkmanPhone;
+							$scope.province.selectedOption.name = result.object.provinceName;
+							$scope.province.selectedOption.id = result.object.provinceCode;
+							$scope.city.selectedOption.name = result.object.cityName;
+							$scope.city.selectedOption.id = result.object.cityCode;
+							$scope.areaSelector.selectedOption.name = result.object.areaName;
+							$scope.areaSelector.selectedOption.id = result.object.areaCode;
+							$scope.query.shopAddress = result.object.shopAddress;
+							
+							//获取城市信息
+							storeBiz.getDistInfos({typeCode: '3', parentDistCode: result.object.provinceCode}).then(function (result) {
+								if (result.success && result.object.length > 0) {
+									var citys = [];
+									citys.push({id: '0', name: '请选择城市'});
+									for (var i = 0; i < result.object.length; i++) {
+										citys.push({id: result.object[i].distCode, name: result.object[i].distCnName});
+									}
+									$scope.city.availableOptions = citys;
+								} else {
+									$ocsPopup.growl(result.errorInfo, {type: 'danger'});
+								}
+							}, function (errorResult) {
+								$ocsPopup.growl(errorResult.text, {type: 'danger'});
+							});
+							//获取县区信息
+							storeBiz.getDistInfos({typeCode: '4', parentDistCode: result.object.cityCode}).then(function (result) {
+								if (result.success && result.object.length > 0) {
+									var areas = [];
+									areas.push({id: '0', name: '请选择县区'});
+									for (var i = 0; i < result.object.length; i++) {
+										areas.push({id: result.object[i].distCode, name: result.object[i].distCnName});
+									}
+									$scope.areaSelector.availableOptions = areas;
+								} else {
+									$ocsPopup.growl(result.errorInfo, {type: 'danger'});
+								}
+							}, function (errorResult) {
+								$ocsPopup.growl(errorResult.text, {type: 'danger'});
+							});
+							
+                        } else {
+                            $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                        }
+                    }, function (errorResult) {
+                        $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                    });
+
+				};
+
+                var map;//地图
+                var initMap = function () {
+                    $scope.localtionBtn = true;//定位按钮显示标记
+                    try {
+                        $("#storeCreateMapContainer").children().remove();
+                        map = new AMap.Map('storeCreateMapContainer', {
+                            center: [$rootScope.authUser.lng, $rootScope.authUser.lat],
+                            zoom: 12
+                        });
+                    } catch (e) {
+                        //如果地图加载失败,移除地图相关标签
+                        $("#storeCreateMapContainer").parent().remove();
+                        $scope.localtionBtn = false;
+                        $ocsPopup.growl('地图初始化失败,请检查网络', {type: 'danger', delay: 1000});
+                    }
+                };
+                //地址定位
+                $scope.gpsLocaltion = function () {
+                    var cityCode = $scope.city.selectedOption.name;//城市
+                    if (!cityCode) {
+                        $ocsPopup.growl('请选择城市代码', {type: 'danger', delay: 1000});
+                        return;
+                    }
+                    if (!$scope.query.shopAddress) {
+                        $ocsPopup.growl('请输入详细地址', {type: 'danger', delay: 1000});
+                        return;
+                    }
+                    try {
+                        AMap.service(["AMap.PlaceSearch"], function() {
+                            var placeSearch = new AMap.PlaceSearch({ //构造地点查询类
+                                pageSize: 5,
+                                pageIndex: 1,
+                                city: cityCode
+                            });
+                            //关键字查询
+                            placeSearch.search($scope.query.shopAddress, callback);
+                            var placeSearchRender = new Lib.AMap.PlaceSearchRender({
+                                finishCallback : function(element, data) {
+                                    //点击确定后回调逻辑
+                                    var text = element.find(".amap-lib-infowindow-content").prev(".amap-lib-infowindow-title")[0].innerText;
+                                    $scope.query.shopAddress = text.substr(2, text.indexOf('详情') - 2).trim();
+                                    $scope.query.longitude = data.location.lng;
+                                    $scope.query.latitude = data.location.lat;
+                                    $scope.$apply();
+                                }
+                            });
+                            function callback(status, result) {
+                                if (status === 'complete' && result.info === 'OK') {
+                                    placeSearchRender.autoRender({
+                                        placeSearchInstance: placeSearch,
+                                        panel: "panel",
+                                        methodName: "search",
+                                        methodArgumments: [$scope.query.shopAddress, callback],
+                                        data: result,
+                                        map: map
+                                    });
+                                }
+                            }
+                        });
+                    } catch (e) {
+                        $ocsPopup.growl('地图查询失败', {type: 'danger', delay: 1000});
+                    }
+                };
+				$scope.getArea = function () {
+                    //获取县区信息
+                    storeBiz.getDistInfos({typeCode: '4', parentDistCode: $scope.city.selectedOption.id}).then(function (result) {
+                        if (result.success && result.object.length > 0) {
+                            var areas = [];
+							areas.push({id: '0', name: '请选择县区'});
+                            for (var i = 0; i < result.object.length; i++) {
+                                areas.push({id: result.object[i].distCode, name: result.object[i].distCnName});
+                            }
+                            $scope.areaSelector.availableOptions = areas;
+                        } else {
+                            $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                        }
+                    }, function (errorResult) {
+                        $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                    });
+				};
+				$scope.getCity = function () {
+                    //获取城市信息
+                    storeBiz.getDistInfos({typeCode: '3', parentDistCode: $scope.province.selectedOption.id}).then(function (result) {
+                        if (result.success && result.object.length > 0) {
+                            var citys = [];
+							citys.push({id: '0', name: '请选择城市'});
+                            for (var i = 0; i < result.object.length; i++) {
+                                citys.push({id: result.object[i].distCode, name: result.object[i].distCnName});
+                            }
+                            $scope.city.availableOptions = citys;
+                        } else {
+                            $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                        }
+                    }, function (errorResult) {
+                        $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                    });
+				};
+                //数据初始化
+                $scope.initData = function () {
+                    //获取省份信息
+                    storeBiz.getDistInfos({typeCode: '2', parentDistCode: 'A000086000'}).then(function (result) {
+                        if (result.success && result.object.length > 0) {
+                            var provinces = [];
+							provinces.push({id: '0', name: '请选择省份'});
+                            for (var i = 0; i < result.object.length; i++) {
+                                provinces.push({id: result.object[i].distCode, name: result.object[i].distCnName});
+                            }
+                            $scope.province.availableOptions = provinces;
+                        } else {
+                            $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                        }
+                    }, function (errorResult) {
+                        $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                    });
+                    //加载地图
+                    initMap();
+                };
+				getShopInfo();
+				
+                $scope.saveStore = function () {
+                    if (!$scope.query.shopName) {
+                        $ocsPopup.growl('请输入店铺名称', {type: 'danger'});
+                        $("#shopName")[0].focus();
+                        return;
+                    }
+                    if (!$scope.query.linkman) {
+                        $ocsPopup.growl('请输入联系人', {type: 'danger'});
+                        $("#linkman")[0].focus();
+                        return;
+                    }
+                    if (!$scope.query.linkmanPhone) {
+                        $ocsPopup.growl('请输入联系方式', {type: 'danger'});
+                        $("#linkmanPhone")[0].focus();
+                        return;
+                    }
+                    var mobileRe = /^1[3|4|5|7|8]\d{9}$/;
+                    var telRe = /^\d{7,8}$/;
+                    var telLen = $scope.query.linkmanPhone.length;
+                    if (telLen != 7 && telLen != 8 && telLen != 11) {
+                        $ocsPopup.growl('请输入正确的手机号码或电话', {type: 'danger'});
+                        $("#linkmanPhone")[0].focus();
+                        return;
+                    }
+                    if (telLen == 11 && !mobileRe.test($scope.query.linkmanPhone)) {
+                        $ocsPopup.growl('请输入正确的手机号码', {type: 'danger'});
+                        $("#linkmanPhone")[0].focus();
+                        return;
+                    }
+                    if ((telLen == 7 || telLen == 8) && !telRe.test($scope.query.linkmanPhone)) {
+                        $ocsPopup.growl('请输入正确的电话号码', {type: 'danger'});
+                        $("#linkmanPhone")[0].focus();
+                        return;
+                    }
+                    if (!$scope.query.shopAddress) {
+                        $ocsPopup.growl('请输入详细地址', {type: 'danger'});
+                        $("#shopAddress")[0].focus();
+                        return;
+                    }
+					$scope.query.shopId=$("#shopId").val();
+					$scope.query.shopCode=$("#shopCode").val();
+					$scope.query.clientCode=$("#clientCode").val();
+					$scope.query.isShopFlag=$("#isShopFlag").val();
+					$scope.query.isPlatForm=$("#isPlatForm").val();
+					$scope.query.protocolAuditStatus=$("#protocolAuditStatus").val();
+					$scope.query.priceAuditStatus=$("#priceAuditStatus").val();
+					$scope.query.allowOrderFromClient=$("#allowOrderFromClient").val();	
+					$scope.query.createEmp=$("#createEmp").val();		
+					$scope.query.createTm=$("#createTm").val();		
+					$scope.query.imagePath=$("#imagePath").val();
+					$scope.query.belongCityCode=$("#belongCityCode").val();
+					if(!$scope.query.longitude){
+						$scope.query.longitude=$("#longitude").val();
+					}
+					if(!$scope.query.latitude){
+						$scope.query.latitude=$("#latitude").val();
+					}
+					$scope.query.parentShopCode=$rootScope.authUser.parentShopCode;
+					$scope.query.provinceCode=$scope.province.selectedOption.id;
+					$scope.query.provinceName=$scope.province.selectedOption.name;
+					$scope.query.cityName=$scope.city.selectedOption.name;
+					$scope.query.cityCode=$scope.city.selectedOption.id;
+					$scope.query.areaName=$scope.areaSelector.selectedOption.name;
+					$scope.query.areaCode=$scope.areaSelector.selectedOption.id;
+					$scope.query.auditType='0';//未审核
+					$scope.query.categoryType='2';//个体
+					$scope.query.shopType='3';
+					$scope.query.country='CN';
+					$scope.query.serviceType='SE0083';
+					$scope.query.billCityCode=$scope.city.selectedOption.id;
+					$scope.query.distAreaCode=$scope.areaSelector.selectedOption.id;
+					$scope.query.modifyEmp=$rootScope.authUser.shopCode;
+					
+                    storeBiz.saveStore($scope.query).then(
+                        function (result) {
+                            if (result.success) {
+                                $ocsPopup.growl('店铺创建成功', {type: 'success'});
+                            } else {
+                                $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                            }
+                        },
+                        function (errorResult) {
+                            $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                        }
+                    );
+                };
+				
+            }
+        ])
+
+        //店铺查看
+        .controller('storeShowCtrl', ['$rootScope', '$scope', '$state', '$stateParams', 'storeBiz', '$ocsPopup', '$cookies', 'SystemConfig', 'shopBiz', 'CacheBiz', 'ValidateBiz',
+            function ($rootScope, $scope, $state, $stateParams, storeBiz, $ocsPopup, $cookies, SystemConfig, shopBiz, CacheBiz, ValidateBiz) {
+                var shopId = $stateParams.shopId;
+                $scope.query = {
+					shopCode: '',//内部编码
+					parentShopCode: '',//商家编码
+                    clientCode: '',//店铺编码
+                    shopName: '',//店铺名称
+                    linkman: '',//联系人
+                    linkmanPhone: '',//联系方式
+                    provinceName: '',//省份名称
+                    provinceCode: '',//省份编码
+                    cityName: '',//城市名称
+                    cityCode: '',//城市编码
+                    areaName: '',//县区名称
+                    areaCode: '',//县区编码
+                    shopAddress : '',//店铺地址
+                    auditType : ''//审核状态
+                };
+                              
+				var getShopInfo = function () {
+                    //获取商家或店铺信息
+                    storeBiz.getShopInfo({shopId: shopId}).then(function (result) {
+                        if (result.success && result.object) {
+							$scope.query.shopCode = result.object.shopCode;
+							$scope.query.parentShopCode = result.object.parentShopCode;
+                            $scope.query.clientCode = result.object.clientCode;
+							$scope.query.shopName = result.object.shopName;
+							$scope.query.linkman = result.object.linkman;
+							$scope.query.linkmanPhone = result.object.linkmanPhone;
+							$scope.query.provinceName = result.object.provinceName;
+							$scope.query.provinceCode = result.object.provinceCode;
+							$scope.query.cityName = result.object.cityName;
+							$scope.query.cityCode = result.object.cityCode;
+							$scope.query.areaName = result.object.areaName;
+							$scope.query.areaCode = result.object.areaCode;
+							$scope.query.shopAddress = result.object.shopAddress;
+							$scope.query.auditType = result.object.auditType;
+                        } else {
+                            $ocsPopup.growl(result.errorInfo, {type: 'danger'});
+                        }
+                    }, function (errorResult) {
+                        $ocsPopup.growl(errorResult.text, {type: 'danger'});
+                    });
+				};
+				getShopInfo();
+            }
+        ])
+		//商家管理
         .controller('merChantManagerCtrl', ['$scope', '$state', '$rootScope', '$cookies', 'storeBiz', '$ocsPopup',
             function ($scope, $state, $rootScope, $cookies, storeBiz, $ocsPopup) {
 

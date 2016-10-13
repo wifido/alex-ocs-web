@@ -35,18 +35,67 @@ define([
 
         .factory('CacheBiz', [function ($http, $q) {
             return {
-                getCache: function (key) {
+                //sessionStorage
+                getCacheFromSession: function (key) {
                     var value = window.sessionStorage[key];
                     if (value) {
                         return angular.fromJson(value);
                     }
                     return null;
                 },
-                setCache: function (key, value) {
+                setCacheToSession: function (key, value) {
                     window.sessionStorage[key] = angular.toJson(value);
                 },
-                removeCache: function (key) {
+                removeCacheFromSession: function (key) {
                     window.sessionStorage.removeItem(key);
+                },
+                //localStorage
+                getCacheFromLocal: function (key) {
+                    var value = window.localStorage[key];
+                    if (value) {
+                        return angular.fromJson(value);
+                    }
+                    return null;
+                },
+                setCacheToLocal: function (key, value) {
+                    window.localStorage[key] = angular.toJson(value);
+                },
+                removeCacheFromLocal: function (key) {
+                    window.localStorage.removeItem(key);
+                }
+            };
+        }])
+
+        .factory('ValidateBiz', ['$http', '$q', function ($http, $q) {
+            return {
+                reg: function (type, value) {
+                    var flag = false;
+                    var regBox = {
+                        regEmail: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,//邮箱
+                        regName: /^[a-z0-9_-]{3,16}$/,//用户名
+                        regMobile: /^0?1[3|4|5|8][0-9]\d{8}$/,//手机
+                        regTel: /^0?1[3|4|5|7|8][0-9]\d{8}$|^[\d]{7,8}$/,//手机或固话(无区号) 0[\d]{2,3}
+                        reDigit: /^\d+(\.\d+)?$/ //数字
+                    };
+                    switch (type) {
+                        case 1 : //邮箱
+                            flag = regBox.regEmail.test(value);
+                            break;
+                        case 2 : //用户名
+                            flag = regBox.regName.test(value);
+                            break;
+                        case 3 : //手机
+                            flag = regBox.regMobile.test(value);
+                            break;
+                        case 4 : //手机或固话
+                            flag = regBox.regTel.test(value);
+                            break;
+                        case 5: //数字与小数点
+                            flag = regBox.reDigit.test(value);
+                        default :
+                            break;
+                    }
+                    return flag;
                 }
             };
         }])

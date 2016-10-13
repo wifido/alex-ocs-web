@@ -21,10 +21,11 @@ body {
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family:'Microsoft yahei', 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-weight: 400;
   overflow-x: hidden;
   overflow-y: auto;
+  background: #ecf0f5;
 }
 /* Layout */
 .wrapper {
@@ -147,8 +148,7 @@ body.hold-transition .main-header .logo {
   padding: 15px;
   margin-right: auto;
   margin-left: auto;
-  padding-left: 15px;
-  padding-right: 15px;
+  padding-top: 5px;
 }
 /* H1 - H6 font */
 h1,
@@ -1324,7 +1324,7 @@ a:focus {
 .progress > .progress-bar,
 .progress .progress-bar,
 .progress > .progress-bar .progress-bar {
-  border-radius: 1px;
+  border-radius: 5px;
 }
 /* size variation */
 .progress.sm,
@@ -1731,6 +1731,7 @@ a:focus {
 .box-header > .glyphicon,
 .box-header > .ion,
 .box-header .box-title {
+  font-family: "Microsoft yahei";
   display: inline-block;
   font-size: 18px;
   margin: 0;
@@ -2961,7 +2962,7 @@ table.text-center th {
   background: rgba(0, 0, 0, 0.3);
 }
 .modal-content {
-  border-radius: 0;
+  border-radius: 5px;
   -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.125);
   border: 0;
@@ -3231,6 +3232,7 @@ table.text-center th {
   padding: 20px;
   border-top: 0;
   color: #666;
+  border-radius: 5px;
 }
 .login-box-body .form-control-feedback,
 .register-box-body .form-control-feedback {

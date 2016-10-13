@@ -1,0 +1,66 @@
+<header class="order-hd">
+   <a href="#"><i class="icon-chevron-left"></i>返回</a>
+   <h2>欢迎登陆顺丰速运同城配服务平台</h2>
+</header>
+<div class="main">
+    <form method="post" name="changePwdForm">
+        <div class="form-group">
+            <label for="linkman" class="col-sm-3 control-label">收货人</label>
+            <div class="col-sm-9">
+                <input ng-model="query.contactPerson" type="text" class="form-control" id="linkman"
+                       placeholder="请输入收货联系人" ng-maxlength="20" maxlength="20" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="telephone" class="col-sm-3 control-label">联系方式</label>
+            <div class="col-sm-9">
+                <input ng-model="query.contactMobile" type="tel" class="form-control" id="telephone"
+                       placeholder="请输入联系手机或电话(无需填写区号)" ng-maxlength="11" maxlength="11">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="area" class="col-sm-3 col-xs-12 control-label">省市区</label>
+            <div class="col-sm-5 col-xs-6">
+                <input type="text" class="form-control" ng-value="city" disabled="true">
+            </div>
+            <div class="col-sm-4 col-xs-6">
+                <select ng-model="areaSelector.selectedOption" class="form-control" id="area"
+                        ng-options="option.name for option in areaSelector.availableOptions track by option.id">
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="contactAddress" class="col-xs-3 control-label">详细地址</label>
+            <div class="col-xs-9">
+                <input ng-model="query.contactAddress" type="text" class="form-control" id="contactAddress"
+                       placeholder="请输入详细地址" ng-maxlength="200" maxlength="200">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="area" class="col-xs-3control-label">期望送达时间</label>
+            <div class="col-xs-9">
+                <select ng-change="changeTimeType(timeTypeSelector.selectedOption)" ng-model="timeTypeSelector.selectedOption" class="form-control" id="timeType"
+                        ng-options="option.name for option in timeTypeSelector.availableOptions track by option.id">
+                </select>
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="orderNo" class="col-xs-3 control-label">订单号</label>
+            <div class="col-xs-9">
+                <!--placeholder="请录入订单号或系统自动生成"-->
+                <input ng-model="genOrderNo" type="text" class="form-control" id="orderNo"
+                       ng-value="genOrderNo" ng-maxlength="23" maxlength="23">
+            </div>
+         </div>
+    </form>
+    <div class="">
+       <ul>
+           <li><strong>发货地址：</strong>广东省深圳市福田区泰然九路210号
+           <li><strong>发件人：</strong>沃尔玛（深圳店）</li>
+           <li><strong>联系方式：</strong>0755-6089909</li>
+       </ul>
+    </div>
+    <div class=""><a href="#" class="btn">确认下单</a></div>
+</div>
+

@@ -43,6 +43,7 @@ define([
                         var defaultParams = {
                             id : "", //id,用于选择主元素
                             columns : [], //表格列格式
+							successCallback : "",//请求成功回调函数
                             clickRowCallback : function () {}, //普通点击行回调函数
                             expandRowCallback : function () {}, //扩展点击回调函数,如点击详细图标展开详细页面的时触发
                             accessControlCallback : "", //权限控制方法
@@ -60,6 +61,9 @@ define([
                                     var dataTable = $('#' + dataTableParams.id).bootstrapTable({
                                         columns: dataTableParams.columns
                                     });
+                                    if (typeof scope.tableObj.successCallback == 'function') {
+                                        scope.tableObj.successCallback();
+                                    }
                                     dataTable.on("click-row.bs.table", dataTableParams.clickRowCallback);
                                     dataTable.on('expand-row.bs.table', dataTableParams.expandRowCallback);
                                 });

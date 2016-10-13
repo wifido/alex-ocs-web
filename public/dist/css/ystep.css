@@ -1,0 +1,127 @@
+/*common css*/
+.clearfix::after{
+  content:".";display:block;font-size:0;
+  line-height:0;height:0;clear:both;visibility:hidden}
+.ystep-container {
+  font-family: "Helvetica Neue",Helvetica,"Hiragino Sans GB","Wenquanyi Micro Hei","Microsoft Yahei",Arial,sans-serif;
+  display: inline-block;
+  position: relative;
+  color: #000;
+}
+.ystep-container ul {
+  list-style: none;
+}
+.ystep-container ul,.ystep-container li,.ystep-container p {
+  margin: 0;
+  padding: 0;
+}
+/*size css*/
+.ystep-lg {
+  width: 100%;
+  height: 60px;
+  font-size: 18px;
+
+  counter-reset: step; 
+}
+/*large size css*/
+.ystep-lg .ystep-container-steps {
+  position: absolute;
+  top: 2px;
+  cursor: pointer;
+  z-index: 10;
+  width: 100%;
+  box-sizing: content-box;
+}
+.ystep-lg li {
+  float: left;
+  list-style-type: none;
+  font-size: 16px;
+  text-align: center;
+  width: 20%;
+  position: relative;
+  float: left;
+  /*margin-right: 100px;*/
+}
+.ystep-lg li:before {
+    display: block;
+    content: counter(step); /*设定计数器内容*/
+    counter-increment: step;  /*计数器值递增*/
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 100%;
+    background:#009dd9;
+    color:#fff;
+    font-size: 16px;
+    color: #fff;
+    text-align: center;
+    font-weight: 700;
+    margin: 0 auto 8px auto;
+    position: relative;
+    z-index: 9;
+  }
+.ystep-lg .ystep-step-done::before {
+       background: #60baff;
+}
+.ystep-lg .ystep-step-undone::before  {
+       background: #e4e4e4;
+}
+.ystep-lg .ystep-step-active::before  {
+        background: #3276b1;
+}
+.ystep-lg .ystep-progress {
+  box-sizing: content-box;
+  width: 100%;
+  height: 2px;
+  line-height: 0px;
+  position: absolute;
+  top: 20px;
+  float: left;
+  overflow: hidden;
+}
+.ystep-lg .ystep-progress-bar {
+  width: 80%;
+  height: 20px;
+  background: #e4e4e4;
+  display: inline-block;
+  float: left;
+  border-radius:10px; 
+  margin-left: 10%;
+}
+.ystep-lg .ystep-progress-highlight {
+  height: 20px;
+  border-radius:10px; 
+	display: block;
+}
+
+/*blue css*/
+.ystep-blue .ystep-step-done {
+}
+.ystep-blue .ystep-step-undone {
+  color: #9c9a9b;
+}
+.ystep-blue .ystep-step-active {
+  color: #3276b1;
+}
+.ystep-blue .ystep-progress-highlight {
+  background: #60baff;
+}
+/*按钮样式*/
+.ystep {
+  padding: 25px 0px;
+}
+.step-button{
+  position: relative;
+ 
+}
+.step-button button{
+  margin: 15px;
+}
+@media (max-width:768px) {
+    .ystep-lg li{
+        font-size: 14px;
+    }
+
+}
+}
+
